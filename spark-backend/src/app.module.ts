@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "./users/entities/user.entity";
+import { GoalsModule } from './goals/goals.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import {User} from "./users/entities/user.entity";
         database: 'spark',
         entities: [User],
         synchronize: true
-      })
+      }),
+      GoalsModule
   ],
   controllers: [AppController],
   providers: [AppService],
