@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "./users/entities/user.entity";
+import { SparkAccountsModule } from './spark-accounts/spark-accounts.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import {User} from "./users/entities/user.entity";
         database: 'spark',
         entities: [User],
         synchronize: true
-      })
+      }),
+      SparkAccountsModule
   ],
   controllers: [AppController],
   providers: [AppService],
