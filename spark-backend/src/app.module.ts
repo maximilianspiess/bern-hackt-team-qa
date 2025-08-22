@@ -2,13 +2,16 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {User} from "./users/entities/user.entity";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { User } from "./users/entities/user.entity";
 import { GoalsModule } from './goals/goals.module';
+import { HabitsModule } from "./habits/habits.module";
 
 @Module({
   imports: [
       UsersModule,
+      HabitsModule,
+      GoalsModule,
       TypeOrmModule.forRoot({
         type: 'postgres',
         host: 'localhost',
@@ -18,8 +21,7 @@ import { GoalsModule } from './goals/goals.module';
         database: 'spark',
         entities: [User],
         synchronize: true
-      }),
-      GoalsModule
+      })
   ],
   controllers: [AppController],
   providers: [AppService],
