@@ -6,6 +6,9 @@ import {Repository} from "typeorm";
 import {Habit} from "./entities/habit.entity";
 import {User} from "../users/entities/user.entity";
 import {Goal} from "../goals/entities/goal.entity";
+import {CreateUserDto} from "../users/dto/create-user.dto";
+import {instanceToPlain} from "class-transformer";
+import {HabitDto} from "./dto/habit.dto";
 
 @Injectable()
 export class HabitsService {
@@ -43,11 +46,13 @@ export class HabitsService {
         createHabitDto.icon
     );
 
-    return await this.habitRepository.save(habit);
+    const newHabit = await this.habitRepository.save(habit);
+
+    return HabitDto.fromEntity(newHabit);
   }
 
   async findAll() {
-    return await this.habitRepository.find();
+    return (await this.habitRepository.find({ relations: ["user", "goals"] })).map(habit => HabitDto.fromEntity(habit));
   }
 
   async findOne(id: string) {
@@ -55,14 +60,17 @@ export class HabitsService {
       id: id
     })
     if (habit == null) {
-      throw new NotFoundException("Habit not found");
+      throw new NotFoundException(`Habit with id '${id}' not found`);
     }
 
-    return habit;
+    return HabitDto.fromEntity(habit);
   }
 
   async update(id: string, updateHabitDto: UpdateHabitDto) {
-    return await this.habitRepository.update(id, updateHabitDto);
+    await this.habitRepository.update(id, updateHabitDto);
+    return this.habitRepository.findOneByOrFail({
+      id: id
+    })
   }
 
   async remove(id: string) {
