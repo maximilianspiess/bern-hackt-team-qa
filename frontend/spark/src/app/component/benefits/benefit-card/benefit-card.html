@@ -1,14 +1,23 @@
 <mat-card appearance="outlined">
-  <mat-card-content>
+  <mat-card-content (click)="openDialog()">
     <div>
       <div>
-        <div class="benefit-card__content">Bild</div>
-        <div>Sparks</div>
+        <div class="benefit-card__content">
+          <img src="{{benefit.imageUlr}}" alt="benefit-image">
+        </div>
+        <div>
+          {{benefit.sparkPrice}}
+        </div>
       </div>
       <div>
-        <div>Title</div>
-        <div>Description</div>
-        <div>Expiration</div>
+        <div>
+          <p>{{benefit.title}}</p>
+        </div>
+        <div>{{benefit.description}}</div>
+        <div>
+          <div>{{benefit.discount}}</div>
+          <div>{{benefit.expirationDate}}</div>
+        </div>
       </div>
     </div>
   </mat-card-content>
