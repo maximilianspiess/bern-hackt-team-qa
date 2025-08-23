@@ -1,9 +1,10 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {ConflictException, ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import {CreateUserDto} from './dto/create-user.dto';
 import {Repository} from "typeorm";
 import {InjectRepository} from "@nestjs/typeorm";
 import {User} from "./entities/user.entity";
 import {GetUserDto} from "./dto/get-user.dto";
+import {UserPayload} from "./auth/user-payload.model";
 
 @Injectable()
 export class UsersService {
@@ -13,14 +14,12 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    let existingUser = await this.userRepository.find({
-      where: {
+    let existingUser = await this.userRepository.findOneBy({
         username: createUserDto.username
-      }
     });
 
     if (existingUser != null) {
-      throw new HttpException("User with that username already exists", HttpStatus.CONFLICT);
+      throw new ConflictException(`User with username '${createUserDto.username}' already exists`);
     }
     let newUser = new User(createUserDto.username, createUserDto.password);
     let createdUser = await this.userRepository.save(newUser);
@@ -32,13 +31,21 @@ export class UsersService {
     return users.map(user => GetUserDto.fromUser(user));
   }
 
-  async findOne(id: string) {
+  findCurrent(currentUser: UserPayload) {
+    return this.findOne(currentUser.id, currentUser);
+  }
+
+  async findOne(id: string, currentUser: UserPayload) {
+    if (id !== currentUser.id){
+      throw new ForbiddenException("You are not permitted to view this user.");
+    }
+
     let user = await this.userRepository.findOneBy({
       id: id
     });
 
     if (user == null) {
-      throw new HttpException(`User with id ${id} not found`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`User with id ${id} not found`);
     }
 
     return GetUserDto.fromUser(user);
@@ -50,7 +57,7 @@ export class UsersService {
     });
 
     if (user == null) {
-      throw new HttpException(`User with ID ${id} not found`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
 
     await this.userRepository.remove(user);

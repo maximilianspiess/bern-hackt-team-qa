@@ -1,11 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateHabitDto } from './dto/create-habit.dto';
-import { UpdateHabitDto } from './dto/update-habit.dto';
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Habit } from "./entities/habit.entity";
-import { User } from "../users/entities/user.entity";
-import { Goal } from "../goals/entities/goal.entity";
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {CreateHabitDto} from './dto/create-habit.dto';
+import {UpdateHabitDto} from './dto/update-habit.dto';
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
+import {Habit} from "./entities/habit.entity";
+import {User} from "../users/entities/user.entity";
+import {Goal} from "../goals/entities/goal.entity";
 
 @Injectable()
 export class HabitsService {
@@ -23,7 +23,7 @@ export class HabitsService {
       id: createHabitDto.userId
     });
     if (user == null) {
-      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+      throw new NotFoundException("User not found");
     }
 
     const goals = await Promise.all(createHabitDto.goalIds.map(async goalId => {
@@ -31,7 +31,7 @@ export class HabitsService {
         id: goalId
       })
       if (goal == null) {
-        throw new HttpException("Goal not found", HttpStatus.NOT_FOUND);
+        throw new NotFoundException("Goal not found");
       }
       return goal;
     }));
@@ -55,7 +55,7 @@ export class HabitsService {
       id: id
     })
     if (habit == null) {
-      throw new HttpException("Habit not found", HttpStatus.NOT_FOUND);
+      throw new NotFoundException("Habit not found");
     }
 
     return habit;
@@ -70,7 +70,7 @@ export class HabitsService {
       id: id
     });
     if (habit == null) {
-      throw new HttpException("Habit not found", HttpStatus.NOT_FOUND);
+      throw new NotFoundException("Habit not found");
     }
 
     await this.habitRepository.remove(habit);

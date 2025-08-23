@@ -13,13 +13,13 @@ export class Habit {
     @ManyToOne(() => User)
     user: User;
 
-    @Column("blob")
-    icon: String;
+    @Column()
+    icon: string;
 
     @OneToMany(() => Goal, goal => goal.habit)
     goals: Goal[];
 
-    constructor(title: string, user: User, goals: Goal[], icon: String) {
+    constructor(title: string, user: User, goals: Goal[], icon: string) {
         this.title = title;
         this.user = user;
         this.goals = goals;

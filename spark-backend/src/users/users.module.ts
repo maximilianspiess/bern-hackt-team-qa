@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {Logger, Module} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import {TypeOrmModule} from "@nestjs/typeorm";
@@ -15,9 +15,10 @@ import {SessionService} from "./auth/session.service";
       TypeOrmModule.forFeature([User]),
       PassportModule,
       JwtModule.register({
-          secret: process.env.JWT_SECRET || 'test',
-          signOptions: { expiresIn: '1440'}
-      })
+          secret: process.env.JWT_SECRET || 'thisIsAVeryLongAndSecurePassword',
+          signOptions: { expiresIn: '1440m'}
+      }),
+
   ],
   controllers: [UsersController],
   providers: [UsersService, JwtStrategy, AuthService, SessionService],

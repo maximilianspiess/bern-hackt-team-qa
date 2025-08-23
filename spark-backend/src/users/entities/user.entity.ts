@@ -18,6 +18,6 @@ export class User {
     }
 
     @OneToOne(() => SparkAccount)
-    @JoinColumn({name: "spark_acount_id"})
+    @JoinColumn({name: "sparkAccountId"})
     account: SparkAccount;
 }

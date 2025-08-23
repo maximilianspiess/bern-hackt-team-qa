@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
+import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {User} from "../entities/user.entity";
 import {Repository} from "typeorm";
@@ -21,11 +21,11 @@ export class AuthService{
         });
 
         if (user == null){
-            throw new HttpException(`User with username '${request.username}' not found`, HttpStatus.NOT_FOUND);
+            throw new NotFoundException(`User with username '${request.username}' not found`);
         }
 
         if (user.password !== request.password){
-            throw new HttpException("Wrong username", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Wrong password");
         }
 
         this.sessionService.removeSession(user.id);

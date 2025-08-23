@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {SparkAccount} from "./entities/spark-account.entity";
 import {Repository} from "typeorm";
@@ -25,7 +25,7 @@ export class SparkAccountsService {
     });
 
     if (account == null) {
-      throw new HttpException(`SparkAccount with ID ${id} not found`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`SparkAccount with ID ${id} not found`);
     }
 
     return account;
@@ -43,14 +43,14 @@ export class SparkAccountsService {
     });
 
     if (payer == null){
-      throw new HttpException(`Did not find user (payer) with ID ${transaction.payerId}`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`Did not find user (payer) with ID ${transaction.payerId}`);
     }
     if (payee == null){
-      throw new HttpException(`Did not find user (payee) with ID ${transaction.payeeId}`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`Did not find user (payee) with ID ${transaction.payeeId}`);
     }
 
     if (payer.account.amount - transaction.amount < 0){
-      throw new HttpException(`User (payer) with ID ${payer.id} does not have sufficient funds`, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(`User (payer) with ID ${payer.id} does not have sufficient funds`);
     }
 
     payer.account.amount = payer.account.amount - transaction.amount;

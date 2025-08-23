@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {CreateGoalDto} from './dto/create-goal.dto';
 import {UpdateGoalDto} from './dto/update-goal.dto';
 import {InjectRepository} from "@nestjs/typeorm";
@@ -21,7 +21,7 @@ export class GoalsService {
             id: createGoalDto.habitId
         });
         if (habit == null) {
-            throw new HttpException("Habit not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Habit not found");
         }
 
         let goal: Goal;
@@ -30,7 +30,7 @@ export class GoalsService {
                 if (createGoalDto.startDate == null ||
                     createGoalDto.doneDays == null ||
                     createGoalDto.missedDays == null) {
-                    throw new HttpException("Missing required field", HttpStatus.BAD_REQUEST)
+                    throw new BadRequestException("Missing required field")
                 }
                 goal = new DailyGoal(
                     habit,
@@ -45,7 +45,7 @@ export class GoalsService {
                     createGoalDto.dueDate == null ||
                     createGoalDto.doneDays == null ||
                     createGoalDto.missedDays == null) {
-                    throw new HttpException("Missing required field", HttpStatus.BAD_REQUEST)
+                    throw new BadRequestException("Missing required field")
                 }
                 goal = new ScheduledGoal(
                     habit,
@@ -59,7 +59,7 @@ export class GoalsService {
             case "ITERATIVE":
                 if (createGoalDto.numIterations == null ||
                     createGoalDto.doneIterations == null) {
-                    throw new HttpException("Missing required field", HttpStatus.BAD_REQUEST)
+                    throw new BadRequestException("Missing required field",)
                 }
                 goal = new IterativeGoal(
                     habit,
@@ -82,7 +82,7 @@ export class GoalsService {
             id: id
         });
         if (goal == null) {
-            throw new HttpException("Goal not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Goal not found");
         }
         return goal;
     }
@@ -92,7 +92,7 @@ export class GoalsService {
             id: id
         });
         if (goal == null) {
-            throw new HttpException("Goal not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Goal not found");
         }
 
         if (updateGoalDto.habitId != null) {
@@ -100,12 +100,13 @@ export class GoalsService {
                 id: updateGoalDto.habitId
             });
             if (habit == null) {
-                throw new HttpException("Habit not found", HttpStatus.NOT_FOUND);
+                throw new NotFoundException("Habit not found");
             }
             goal.habit = habit;
         }
 
         //TODO glhf for the rest of the fields
+        // how about a validator? Yours truly - Max
 
         await this.goalRepository.save(goal)
     }
@@ -115,7 +116,7 @@ export class GoalsService {
             id: id
         });
         if (goal == null) {
-            throw new HttpException("Goal not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Goal not found");
         }
 
         await this.goalRepository.remove(goal)
