@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {Module} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -17,6 +17,8 @@ import {ServeStaticModule} from "@nestjs/serve-static";
 import { join } from 'path'
 import {FriendBucket} from "./buckets/entity/friend-bucket.entity";
 import {HabitBucket} from "./buckets/entity/habit-bucket.entity";
+import {PostModule} from "./post/post.module";
+import {Post} from "./post/entities/post.entity";
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import {HabitBucket} from "./buckets/entity/habit-bucket.entity";
       HabitsModule,
       GoalsModule,
       SparkAccountsModule,
+      PostModule,
       TypeOrmModule.forRoot({
         type: 'postgres',
         host: 'localhost',
@@ -31,7 +34,7 @@ import {HabitBucket} from "./buckets/entity/habit-bucket.entity";
         username: 'spark_user',
         password: 'sp4rk',
         database: 'spark',
-        entities: [User, SparkAccount, Habit, Goal, FriendBucket, HabitBucket],
+        entities: [User, SparkAccount, Habit, Goal, Post, FriendBucket, HabitBucket],
         synchronize: true
       }),
       ConfigModule.forRoot({
