@@ -29,6 +29,7 @@ import {UserResponseEntity} from '../../model/UserResponseEntity';
     MatCheckboxModule
   ],
   templateUrl: './login.html',
+  standalone: true,
   styleUrl: './login.scss'
 })
 

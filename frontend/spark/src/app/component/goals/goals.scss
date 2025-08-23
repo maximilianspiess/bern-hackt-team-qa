@@ -1,0 +1,23 @@
+:host.goals {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px
+}
+
+.goals {
+  &__habit {
+    width: 95vw;
+  }
+
+  &__goal {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__chart {
+    max-width: 10vw;
+    max-height: 10vw;
+  }
+}

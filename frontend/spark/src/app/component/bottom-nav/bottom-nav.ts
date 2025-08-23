@@ -14,6 +14,7 @@ import {Router, RouterLink, RouterLinkActive} from '@angular/router';
     RouterLinkActive
   ],
   templateUrl: './bottom-nav.html',
+  standalone: true,
   styleUrl: './bottom-nav.scss'
 })
 
