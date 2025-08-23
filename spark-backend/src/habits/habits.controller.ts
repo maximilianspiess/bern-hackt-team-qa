@@ -5,13 +5,11 @@ import {UpdateHabitDto} from './dto/update-habit.dto';
 import {JwtAuthGuard} from "../users/auth/jwt-auth.guard";
 import {CurrentUser} from "../users/auth/user.decorator";
 import {UserPayload} from "../users/auth/user-payload.model";
-import {UsersService} from "../users/users.service";
 
 @Controller('habits')
 export class HabitsController {
     constructor(
-        private readonly habitsService: HabitsService,
-        private readonly usersService: UsersService,
+        private readonly habitsService: HabitsService
     ) {
     }
 

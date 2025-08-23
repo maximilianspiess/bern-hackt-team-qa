@@ -71,7 +71,7 @@ export class HabitsService {
         const friendBucketHabits = (await this.habitRepository
             .find({
                 where: {
-                    id: In(user.friendBuckets.map(bucket => bucket.habitId))
+                    id: In(user.friendBuckets.flatMap(bucket => bucket.habits.map(habit => habit.id)))
                 },
                 relations: ["user", "goals", "goals.habit"]
             }))
