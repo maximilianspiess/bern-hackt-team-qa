@@ -1,88 +1,139 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import {CreateHabitDto} from './dto/create-habit.dto';
 import {UpdateHabitDto} from './dto/update-habit.dto';
 import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
+import {In, Repository} from "typeorm";
 import {Habit} from "./entities/habit.entity";
 import {User} from "../users/entities/user.entity";
 import {Goal} from "../goals/entities/goal.entity";
 import {CreateUserDto} from "../users/dto/create-user.dto";
 import {instanceToPlain} from "class-transformer";
 import {HabitDto} from "./dto/habit.dto";
+import {UserPayload} from "../users/auth/user-payload.model";
 
 @Injectable()
 export class HabitsService {
-  constructor(
-      @InjectRepository(Habit)
-      private habitRepository: Repository<Habit>,
-      @InjectRepository(User)
-      private userRepository: Repository<User>,
-      @InjectRepository(User)
-      private goalRepository: Repository<Goal>
-  ) {}
-
-  async create(createHabitDto: CreateHabitDto) {
-    const user = await this.userRepository.findOneBy({
-      id: createHabitDto.userId
-    });
-    if (user == null) {
-      throw new NotFoundException("User not found");
+    constructor(
+        @InjectRepository(Habit)
+        private habitRepository: Repository<Habit>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+        @InjectRepository(User)
+        private goalRepository: Repository<Goal>
+    ) {
     }
 
-    const goals = await Promise.all(createHabitDto.goalIds.map(async goalId => {
-      const goal = await this.goalRepository.findOneBy({
-        id: goalId
-      })
-      if (goal == null) {
-        throw new NotFoundException("Goal not found");
-      }
-      return goal;
-    }));
+    async create(createHabitDto: CreateHabitDto, currentUser: UserPayload) {
+        const user = (await this.userRepository.findOneBy({
+            id: createHabitDto.userId
+        }))!;
+        if (createHabitDto.userId !== currentUser.id) {
+            throw new ForbiddenException("User in habit must match current user");
+        }
 
-    const habit = new Habit(
-        createHabitDto.title,
-        user,
-        goals,
-        createHabitDto.icon
-    );
+        const goals = await Promise.all(createHabitDto.goalIds.map(async goalId => {
+            const goal = await this.goalRepository.findOneBy({
+                id: goalId
+            })
+            if (goal == null) {
+                throw new NotFoundException("Goal not found");
+            }
+            return goal;
+        }));
 
-    const newHabit = await this.habitRepository.save(habit);
+        const habit = new Habit(
+            createHabitDto.title,
+            user,
+            goals,
+            createHabitDto.icon
+        );
 
-    return HabitDto.fromEntity(newHabit);
-  }
+        const newHabit = await this.habitRepository.save(habit);
 
-  async findAll() {
-    return (await this.habitRepository
-        .find({ relations: ["user", "goals", "goals.habit"] }))
-        .map(habit => HabitDto.fromEntity(habit));
-  }
-
-  async findOne(id: string) {
-    const habit = await this.habitRepository.findOneBy({
-      id: id
-    })
-    if (habit == null) {
-      throw new NotFoundException(`Habit with id '${id}' not found`);
+        return HabitDto.fromEntity(newHabit);
     }
 
-    return HabitDto.fromEntity(habit);
-  }
+    async findAll(currentUser: UserPayload) {
+        const user = (await this.userRepository.findOneBy({
+            id: currentUser.id
+        }))!
 
-  async update(id: string, updateHabitDto: UpdateHabitDto) {
-    await this.habitRepository.update(id, updateHabitDto);
-    return this.habitRepository.findOneByOrFail({
-      id: id
-    })
-  }
+        const currentUserHabits = await this.habitRepository
+            .find({
+                where: {
+                    user: {
+                        id: user.id
+                    }
+                },
+                relations: ["user", "goals", "goals.habit"]
+            });
 
-  async remove(id: string) {
-    const habit = await this.habitRepository.findOneBy({
-      id: id
-    });
-    if (habit == null) {
-      throw new NotFoundException("Habit not found");
+        const friendBucketHabits = (await this.habitRepository
+            .find({
+                where: {
+                    id: In(user.friendBuckets.map(bucket => bucket.habitId))
+                },
+                relations: ["user", "goals", "goals.habit"]
+            }))
+
+        const habitBucketHabits = (await this.habitRepository
+            .find({
+                where: {
+                    id: In(user.habitBuckets.flatMap(bucket => bucket.habits.map(habit => habit.id)))
+                },
+                relations: ["user", "goals", "goals.habit"]
+            }));
+
+        return currentUserHabits
+            .concat(friendBucketHabits)
+            .concat(habitBucketHabits)
+            .map(habits => HabitDto.fromEntity(habits));
     }
 
-    await this.habitRepository.remove(habit);
-  }
+    async findOne(id: string, currentUser: UserPayload) {
+        const habit = await this.habitRepository.findOneBy({
+            id: id
+        });
+        if (habit == null) {
+            throw new NotFoundException(`Habit with id '${id}' not found`);
+        }
+
+        const user = await this.userRepository.findOneByOrFail({
+            id: currentUser.id
+        });
+
+        if (habit.user.id !== user.id ||
+            habit.id in user.friendBuckets.flatMap(bucket => bucket.habits.map(habit => habit.id)) ||
+            habit.id in user.habitBuckets.flatMap(bucket => bucket.habits.map(habit => habit.id))
+        ) {
+            throw new ForbiddenException("Cannot view habit");
+        }
+
+        return HabitDto.fromEntity(habit);
+    }
+
+    async update(id: string, updateHabitDto: UpdateHabitDto, currentUser: UserPayload) {
+        if (updateHabitDto.userId !== currentUser.id) {
+            throw new ForbiddenException("Can only edit habits of current user");
+        }
+
+        await this.habitRepository.update(id, updateHabitDto);
+        return this.habitRepository.findOneByOrFail({
+            id: id
+        });
+    }
+
+    async remove(id: string, currentUser: UserPayload) {
+        const habit = await this.habitRepository.findOneBy({
+            id: id
+        });
+        if (habit == null) {
+            throw new NotFoundException("Habit not found");
+        }
+        if (habit.user.id !== currentUser.id) {
+            throw new ForbiddenException("Can only delete habits of current user");
+        }
+
+        await this.habitRepository.remove(habit);
+    }
 }

@@ -21,7 +21,7 @@ export class HabitBucket{
             referencedColumnName: 'id'
         }
     })
-    commonHabits: Habit[];
+    habits: Habit[];
 
     @ManyToMany(() => User)
     @JoinTable({
@@ -35,5 +35,5 @@ export class HabitBucket{
             referencedColumnName: 'id'
         }
     })
-    users: User[];
+    users: User[]; //TODO may be left out if never used
 }
