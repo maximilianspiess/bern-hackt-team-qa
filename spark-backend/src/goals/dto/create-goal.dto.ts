@@ -1,17 +1,31 @@
-export class CreateGoalDto {
+import {IsDate, IsEnum, IsISO8601, IsNumber, IsUUID} from "class-validator";
+import { GoalType } from "../entities/goal.entity";
+
+export abstract class CreateGoalDto {
+    @IsUUID()
     habitId: string;
-    type: 'DAILY' | 'SCHEDULED' | 'ITERATIVE';
+
+    @IsEnum(GoalType)
+    type: 'daily' | 'scheduled' | 'iterative';
+
+    @IsNumber()
     rewardedSparks: number;
+}
 
-    //DAILY & SCHEDULED
-    startDate?: string;
-    doneDays?: string[];
-    missedDays?: string[];
+export class CreateDailyGoalDto extends CreateGoalDto {
+    @IsDate()
+    startDate: Date;
+}
 
-    //SCHEDULED
-    dueDate?: string;
+export class CreateScheduledGoalDto extends CreateGoalDto {
+    @IsDate()
+    startDate: Date;
 
-    //ITERATIVE
-    numIterations?: number;
-    doneIterations?: number;
+    @IsDate()
+    dueDate: Date;
+}
+
+export class CreateIterativeGoalDto extends CreateGoalDto {
+    @IsNumber()
+    numIterations: number;
 }

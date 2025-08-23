@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
 import { GoalsService } from './goals.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
-import { UpdateGoalDto } from './dto/update-goal.dto';
+import type { UpdateGoalDto } from './dto/update-goal.dto';
+import {JwtAuthGuard} from "../users/auth/jwt-auth.guard";
 
 @Controller('goals')
 export class GoalsController {
   constructor(private readonly goalsService: GoalsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createGoalDto: CreateGoalDto) {
     return this.goalsService.create(createGoalDto);
   }
