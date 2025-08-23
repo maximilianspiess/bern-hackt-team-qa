@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import { CreateBenefitDto } from './dto/create-benefit.dto';
 import { UpdateBenefitDto } from './dto/update-benefit.dto';
+import {InjectRepository} from "@nestjs/typeorm";
+import {Benefit} from "./entities/benefit.entity";
+import {Repository} from "typeorm";
+import {Company} from "./entities/company.entity";
 
 @Injectable()
 export class BenefitsService {
-  create(createBenefitDto: CreateBenefitDto) {
-    return 'This action adds a new benefit';
+  constructor(
+      @InjectRepository(Benefit)
+      private benefitRepository: Repository<Benefit>,
+      @InjectRepository(Company)
+      private companyRepository: Repository<Company>
+  ) {
   }
 
   findAll() {
-    return `This action returns all benefits`;
+    return this.benefitRepository.find({
+      relations: ["company"]
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} benefit`;
+  async findOne(id: string) {
+    let benefit = await this.benefitRepository.findOneBy({
+      id: id
+    });
+
+    if (benefit == null){
+      throw new NotFoundException(`Benefit with ID ${id} not found`);
+    }
+
+    return benefit;
   }
 
-  update(id: number, updateBenefitDto: UpdateBenefitDto) {
-    return `This action updates a #${id} benefit`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} benefit`;
-  }
 }
