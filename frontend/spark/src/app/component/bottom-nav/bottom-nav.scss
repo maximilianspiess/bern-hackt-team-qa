@@ -29,11 +29,11 @@
     &--active {
       & mat-icon {
         border-radius: 15px;
-        background-color: var(--amber);
+        background-color: var(--accent-color1);
       }
 
       & span {
-        color: var(--amber);
+        color: var(--accent-color1);
       }
     }
   }
