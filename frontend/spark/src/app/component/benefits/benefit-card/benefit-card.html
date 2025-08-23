@@ -1,0 +1,24 @@
+<mat-card appearance="outlined">
+  <mat-card-content (click)="openDialog()">
+    <div>
+      <div>
+        <div class="benefit-card__content">
+          <img src="{{benefit.imageUlr}}" alt="benefit-image">
+        </div>
+        <div>
+          {{benefit.sparkPrice}}
+        </div>
+      </div>
+      <div>
+        <div>
+          <p>{{benefit.title}}</p>
+        </div>
+        <div>{{benefit.description}}</div>
+        <div>
+          <div>{{benefit.discount}}</div>
+          <div>{{benefit.expirationDate}}</div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
