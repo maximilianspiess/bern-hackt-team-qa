@@ -71,7 +71,7 @@ export class Login implements OnInit {
       } else {
         console.log("try login:", this.loginForm.value);
       }
-      this.router.navigateByUrl("").then();
+      this.router.navigateByUrl("/home").then();
     }
   }
 }
