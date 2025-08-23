@@ -1,4 +1,4 @@
-import {IsDate, IsEnum, IsISO8601, IsNumber, IsUUID} from "class-validator";
+import {IsDate, IsEnum, IsNumber, IsUUID} from "class-validator";
 import { GoalType } from "../entities/goal.entity";
 
 export abstract class CreateGoalDto {
@@ -6,7 +6,7 @@ export abstract class CreateGoalDto {
     habitId: string;
 
     @IsEnum(GoalType)
-    type: 'daily' | 'scheduled' | 'iterative';
+    type: GoalType
 
     @IsNumber()
     rewardedSparks: number;
