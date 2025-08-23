@@ -1,10 +1,11 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
-import {CreateGoalDto} from './dto/create-goal.dto';
-import {UpdateGoalDto} from './dto/update-goal.dto';
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {Habit} from "../habits/entities/habit.entity";
-import {DailyGoal, Goal, IterativeGoal, ScheduledGoal} from "./entities/goal.entity";
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { CreateDailyGoalDto, CreateGoalDto, CreateIterativeGoalDto, CreateScheduledGoalDto } from './dto/create-goal.dto';
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Habit } from "../habits/entities/habit.entity";
+import { DailyGoal, Goal, IterativeGoal, ScheduledGoal } from "./entities/goal.entity";
+import { UpdateGoalDto } from "./dto/update-goal.dto";
+import { GoalDto } from "./dto/goal.dto";
 
 @Injectable()
 export class GoalsService {
@@ -26,55 +27,51 @@ export class GoalsService {
 
         let goal: Goal;
         switch (createGoalDto.type) {
-            case "DAILY":
-                if (createGoalDto.startDate == null ||
-                    createGoalDto.doneDays == null ||
-                    createGoalDto.missedDays == null) {
-                    throw new BadRequestException("Missing required field")
+            case "daily":
+                const dailyDto = createGoalDto as CreateDailyGoalDto
+                if (dailyDto.startDate == null) {
+                    throw new BadRequestException("Missing required field 'startDate'")
                 }
                 goal = new DailyGoal(
                     habit,
-                    createGoalDto.rewardedSparks,
-                    createGoalDto.startDate,
-                    createGoalDto.doneDays,
-                    createGoalDto.missedDays
+                    dailyDto.rewardedSparks,
+                    dailyDto.startDate,
+                    [], []
                 );
                 break;
-            case "SCHEDULED":
-                if (createGoalDto.startDate == null ||
-                    createGoalDto.dueDate == null ||
-                    createGoalDto.doneDays == null ||
-                    createGoalDto.missedDays == null) {
+            case "scheduled":
+                const scheduledDto = createGoalDto as CreateScheduledGoalDto
+                if (scheduledDto.startDate == null ||
+                    scheduledDto.dueDate == null) {
                     throw new BadRequestException("Missing required field")
                 }
                 goal = new ScheduledGoal(
                     habit,
-                    createGoalDto.rewardedSparks,
-                    createGoalDto.startDate,
-                    createGoalDto.dueDate,
-                    createGoalDto.doneDays,
-                    createGoalDto.missedDays
+                    scheduledDto.rewardedSparks,
+                    scheduledDto.startDate,
+                    scheduledDto.dueDate,
+                    [], []
                 );
                 break;
-            case "ITERATIVE":
-                if (createGoalDto.numIterations == null ||
-                    createGoalDto.doneIterations == null) {
+            case "iterative":
+                const iterativeDto = createGoalDto as CreateIterativeGoalDto
+                if (iterativeDto.numIterations == null) {
                     throw new BadRequestException("Missing required field",)
                 }
                 goal = new IterativeGoal(
                     habit,
-                    createGoalDto.rewardedSparks,
-                    createGoalDto.numIterations,
-                    createGoalDto.doneIterations
+                    iterativeDto.rewardedSparks,
+                    iterativeDto.numIterations,
+                    0
                 );
                 break;
         }
 
-        return this.goalRepository.save(goal);
+        return GoalDto.fromEntity(await this.goalRepository.save(goal));
     }
 
     async findAll() {
-        return await this.goalRepository.find();
+        return (await this.goalRepository.find()).map(goal => GoalDto.fromEntity(goal));
     }
 
     async findOne(id: string) {
@@ -84,7 +81,7 @@ export class GoalsService {
         if (goal == null) {
             throw new NotFoundException("Goal not found");
         }
-        return goal;
+        return GoalDto.fromEntity(goal);
     }
 
     async update(id: string, updateGoalDto: UpdateGoalDto) {
@@ -94,6 +91,8 @@ export class GoalsService {
         if (goal == null) {
             throw new NotFoundException("Goal not found");
         }
+
+        Object.assign(goal, updateGoalDto);
 
         if (updateGoalDto.habitId != null) {
             const habit = await this.habitRepository.findOneBy({
@@ -105,10 +104,7 @@ export class GoalsService {
             goal.habit = habit;
         }
 
-        //TODO glhf for the rest of the fields
-        // how about a validator? Yours truly - Max
-
-        await this.goalRepository.save(goal)
+        return GoalDto.fromEntity(await this.goalRepository.save(goal));
     }
 
     async remove(id: string) {
