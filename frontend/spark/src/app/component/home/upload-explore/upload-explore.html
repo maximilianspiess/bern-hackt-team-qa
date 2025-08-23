@@ -1,1 +1,10 @@
-<p>upload-explore works!</p>
+<div class="upload-explore__card-grid">
+  @for (item of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; track item) {
+    <mat-card class="upload-explore__card" appearance="outlined">
+      <mat-card-content>
+        {{item}}
+      </mat-card-content>
+    </mat-card>
+  }
+</div>
+

@@ -1,16 +1,19 @@
-import { Component } from '@angular/core';
+import {Component, HostBinding} from '@angular/core';
 import {Progress} from './progress/progress';
 import {UploadExplore} from './upload-explore/upload-explore';
+import {Groups} from './groups/groups';
 
 @Component({
   selector: 'app-home',
   imports: [
     Progress,
-    UploadExplore
+    UploadExplore,
+    Groups
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
-export class Home {
 
+export class Home {
+  @HostBinding('class.home') class: boolean = true;
 }
