@@ -6,14 +6,16 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users/entities/user.entity";
 import { GoalsModule } from './goals/goals.module';
 import { HabitsModule } from "./habits/habits.module";
-import {Habit} from "./habits/entities/habit.entity";
-import {Goal} from "./goals/entities/goal.entity";
+import { Habit } from "./habits/entities/habit.entity";
+import { Goal } from "./goals/entities/goal.entity";
+import { SparkAccountsModule } from './spark-accounts/spark-accounts.module';
 
 @Module({
   imports: [
       UsersModule,
       HabitsModule,
       GoalsModule,
+      SparkAccountsModule,
       TypeOrmModule.forRoot({
         type: 'postgres',
         host: 'localhost',
