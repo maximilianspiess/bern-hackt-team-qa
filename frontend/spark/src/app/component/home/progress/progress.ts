@@ -29,32 +29,40 @@ export class Progress implements OnInit {
         data: [30, 70],
         label: 'GOAL1',
         backgroundColor: [
-          'rgb(255, 99, 132)',
-          '#E0E2ECFF'
+          this.chartColorArray[0],
+          '#E2E3DC'
         ],
         hoverOffset: 2
       }, {
         data: [20, 80],
         label: 'GOAL2',
         backgroundColor: [
-          'rgb(54, 162, 235)',
-          '#E0E2ECFF'
+          this.chartColorArray[1],
+          '#E2E3DC'
+        ],
+        hoverOffset: 2
+      }, {
+        data: [95, 5],
+        label: 'GOAL3',
+        backgroundColor: [
+          this.chartColorArray[2],
+          '#E2E3DC'
+        ],
+        hoverOffset: 2
+      }, {
+        data: [50, 50],
+        label: 'GOAL4',
+        backgroundColor: [
+          this.chartColorArray[3],
+          '#E2E3DC'
         ],
         hoverOffset: 2
       }, {
         data: [10, 90],
-        label: 'GOAL3',
-        backgroundColor: [
-          'rgb(255, 205, 86)',
-          '#E0E2ECFF'
-        ],
-        hoverOffset: 2
-      },{
-        data: [50, 50],
         label: 'GOAL4',
         backgroundColor: [
-          'rgb(100, 205, 86)',
-          '#E0E2ECFF'
+          this.chartColorArray[4],
+          '#E2E3DC'
         ],
         hoverOffset: 2
       }]
