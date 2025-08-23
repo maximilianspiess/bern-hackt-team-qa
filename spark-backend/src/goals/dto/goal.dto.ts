@@ -1,4 +1,4 @@
-import {IsArray, IsEnum, IsISO8601, IsNumber, IsUUID} from "class-validator";
+import {IsArray, IsDate, IsEnum, IsISO8601, IsNumber, IsUUID} from "class-validator";
 import {DailyGoal, Goal, GoalType, IterativeGoal, ScheduledGoal} from "../entities/goal.entity";
 
 export abstract class GoalDto {
@@ -53,16 +53,14 @@ export abstract class GoalDto {
 }
 
 export class DailyGoalDto extends GoalDto {
-    @IsISO8601()
-    startDate: string;
-    @IsArray({each: true})
-    @IsISO8601()
-    doneDays: string[];
-    @IsArray({each: true})
-    @IsISO8601()
-    missedDays: string[];
+    @IsDate()
+    startDate: Date;
+    @IsDate({ each: true })
+    doneDays: Date[];
+    @IsDate({ each: true })
+    missedDays: Date[];
 
-    constructor(id: string, habitId: string, rewardedSparks: number, startDate: string, doneDays: string[], missedDays: string[]) {
+    constructor(id: string, habitId: string, rewardedSparks: number, startDate: Date, doneDays: Date[], missedDays: Date[]) {
         super(id, habitId, GoalType.DAILY, rewardedSparks);
         this.startDate = startDate;
         this.doneDays = doneDays;
@@ -71,18 +69,16 @@ export class DailyGoalDto extends GoalDto {
 }
 
 export class ScheduledGoalDto extends GoalDto {
-    @IsISO8601()
-    startDate: string;
-    @IsISO8601()
-    dueDate: string;
-    @IsArray({each: true})
-    @IsISO8601()
-    doneDays: string[];
-    @IsArray({each: true})
-    @IsISO8601()
-    missedDays: string[];
+    @IsDate()
+    startDate: Date;
+    @IsDate()
+    dueDate: Date;
+    @IsDate({ each: true })
+    doneDays: Date[];
+    @IsDate({ each: true })
+    missedDays: Date[];
 
-    constructor(id: string, habitId: string, rewardedSparks: number, startDate: string, dueDate: string, doneDays: string[], missedDays: string[]) {
+    constructor(id: string, habitId: string, rewardedSparks: number, startDate: Date, dueDate: Date, doneDays: Date[], missedDays: Date[]) {
         super(id, habitId, GoalType.SCHEDULED, rewardedSparks);
         this.startDate = startDate;
         this.dueDate = dueDate;

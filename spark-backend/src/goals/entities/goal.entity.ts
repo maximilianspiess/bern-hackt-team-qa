@@ -30,15 +30,15 @@ export abstract class Goal {
 @ChildEntity(GoalType.DAILY)
 export class DailyGoal extends Goal {
     @Column()
-    startDate: string;
+    startDate: Date;
 
     @Column("simple-array")
-    doneDays: string[];
+    doneDays: Date[];
 
     @Column("simple-array")
-    missedDays: string[];
+    missedDays: Date[];
 
-    constructor(habit: Habit, rewardedSparks: number, startDate: string, doneDays: string[], missedDays: string[]) {
+    constructor(habit: Habit, rewardedSparks: number, startDate: Date, doneDays: Date[], missedDays: Date[]) {
         super(habit, rewardedSparks);
         this.startDate = startDate;
         this.doneDays = doneDays;
@@ -49,18 +49,18 @@ export class DailyGoal extends Goal {
 @ChildEntity(GoalType.SCHEDULED)
 export class ScheduledGoal extends Goal {
     @Column()
-    startDate: string;
+    startDate: Date;
 
     @Column()
-    dueDate: string;
+    dueDate: Date;
 
     @Column("simple-array")
-    doneDays: string[];
+    doneDays: Date[];
 
     @Column("simple-array")
-    missedDays: string[];
+    missedDays: Date[];
 
-    constructor(habit: Habit, rewardedSparks: number, startDate: string, dueDate: string, doneDays: string[], missedDays: string[]) {
+    constructor(habit: Habit, rewardedSparks: number, startDate: Date, dueDate: Date, doneDays: Date[], missedDays: Date[]) {
         super(habit, rewardedSparks);
         this.startDate = startDate;
         this.dueDate = dueDate;

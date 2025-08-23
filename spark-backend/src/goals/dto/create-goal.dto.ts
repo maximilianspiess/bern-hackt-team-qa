@@ -13,16 +13,16 @@ export abstract class CreateGoalDto {
 }
 
 export class CreateDailyGoalDto extends CreateGoalDto {
-    @IsISO8601()
-    startDate: string;
+    @IsDate()
+    startDate: Date;
 }
 
 export class CreateScheduledGoalDto extends CreateGoalDto {
-    @IsISO8601()
-    startDate: string;
+    @IsDate()
+    startDate: Date;
 
-    @IsISO8601()
-    dueDate: string;
+    @IsDate()
+    dueDate: Date;
 }
 
 export class CreateIterativeGoalDto extends CreateGoalDto {
