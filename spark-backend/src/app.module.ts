@@ -6,6 +6,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users/entities/user.entity";
 import { GoalsModule } from './goals/goals.module';
 import { HabitsModule } from "./habits/habits.module";
+import {Habit} from "./habits/entities/habit.entity";
+import {Goal} from "./goals/entities/goal.entity";
 
 @Module({
   imports: [
@@ -19,7 +21,7 @@ import { HabitsModule } from "./habits/habits.module";
         username: 'spark_user',
         password: 'sp4rk',
         database: 'spark',
-        entities: [User],
+        entities: [User, Habit, Goal],
         synchronize: true
       })
   ],
