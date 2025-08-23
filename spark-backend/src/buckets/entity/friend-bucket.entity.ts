@@ -44,7 +44,7 @@ export class FriendBucket{
 
     constructor(/*"template habit"*/ habit: Habit, users: User[]) {
         this.inviteCode = this.generateInviteCode();
-        this.habitId = [habit];
+        // this.habits[0] = habit; //TODO introduce template habit
         this.users = users;
     }
 

@@ -5,6 +5,7 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {Habit} from "./entities/habit.entity";
 import {User} from "../users/entities/user.entity";
 import {Goal} from "../goals/entities/goal.entity";
+import {UsersModule} from "../users/users.module";
 
 @Module({
   controllers: [HabitsController],
