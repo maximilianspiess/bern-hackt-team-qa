@@ -65,7 +65,9 @@ export class GoalsService {
     }
 
     async findAll() {
-        return this.goalRepository.find().then(goals => goals.map(goal => GoalDto.fromEntity(goal)));
+        return this.goalRepository.find({
+            relations: ["habit"]
+        }).then(goals => goals.map(goal => GoalDto.fromEntity(goal)));
     }
 
     async findOne(id: string) {

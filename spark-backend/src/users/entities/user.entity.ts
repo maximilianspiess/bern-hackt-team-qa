@@ -23,9 +23,9 @@ export class User {
     @JoinColumn({name: "sparkAccountId"})
     account: SparkAccount;
 
-    @ManyToMany(() => FriendBucket)
+    @ManyToMany(() => FriendBucket, bucket => bucket.users)
     friendBuckets: FriendBucket[];
 
-    @ManyToMany(() => HabitBucket)
+    @ManyToMany(() => HabitBucket, bucket => bucket.users)
     habitBuckets: HabitBucket[];
 }
