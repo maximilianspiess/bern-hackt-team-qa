@@ -60,8 +60,6 @@ export class Post {
         if (imageMedia && !videoMedia) this.mediaType = MediaType.IMAGE;
         else if (videoMedia && !imageMedia) this.mediaType = MediaType.VIDEO;
         else if (imageMedia && videoMedia) this.mediaType = MediaType.IMAGE;
-        else throw new Error('Either imageMedia or videoMedia must be provided');
         this.date = new Date();
-
     }
 }

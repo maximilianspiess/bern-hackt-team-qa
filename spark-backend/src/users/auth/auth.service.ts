@@ -5,6 +5,7 @@ import {Repository} from "typeorm";
 import {LoginRequestDto} from "../dto/login-request.dto";
 import {SessionService} from "./session.service";
 import {JwtService} from "@nestjs/jwt";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService{
@@ -19,13 +20,14 @@ export class AuthService{
         let user = await this.userRepository.findOneBy({
             username: request.username
         });
-        
+
         if (user == null){
             throw new NotFoundException(`User with username '${request.username}' not found`);
         }
 
-        if (user.password !== request.password){
-            throw new BadRequestException("Wrong password");
+        const passwordMatch = await bcrypt.compare(request.password, user.password)
+        if (!passwordMatch){
+            throw new BadRequestException("Incorrect password");
         }
 
         this.sessionService.removeSession(user.id);
