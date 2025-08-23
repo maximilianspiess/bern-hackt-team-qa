@@ -70,7 +70,7 @@ export class Login {
         this.userService.createUser(this.loginForm.value.username!, this.loginForm.value.password!).subscribe({
           next: (data: UserResponseEntity): void => {
             this.userService.loginUser(data.username, this.loginForm.value.password!).subscribe({
-              next: (data2: {accessToken: string}): void => {
+              next: (data2: {access_token: string}): void => {
                 this.setInStorage(data2, {username: data.username});
                 this.redirect("home");
               }
@@ -78,7 +78,7 @@ export class Login {
           }
         });
       } else {this.userService.loginUser(this.loginForm.value.username!, this.loginForm.value.password!).subscribe({
-          next: (data: {accessToken: string}): void => {
+          next: (data: {access_token: string}): void => {
             this.setInStorage(data, {username: this.loginForm.value.username!});
             this.redirect("home");
           }
