@@ -50,7 +50,7 @@ export class PostService {
     }
 
     async findAll(): Promise<Post[]> {
-        return await this.postRepository.find();
+        return this.postRepository.find();
     }
 
     async findOne(id: string): Promise<Post> {
