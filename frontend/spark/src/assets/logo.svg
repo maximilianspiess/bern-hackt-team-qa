@@ -1,0 +1,18 @@
+<svg width="100" height="60" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Mittlere Linie -->
+  <rect x="48" y="12" width="4" height="20" rx="2" fill="#111"/>
+
+  <!-- Linke diagonale Linie -->
+  <rect x="22" y="24" width="4" height="20" rx="2" fill="#FFC901" stroke-width="1px" stroke="#111"
+        transform="rotate(-45 22 28)" />
+
+  <!-- Rechte diagonale Linie -->
+  <rect x="74" y="22" width="4" height="20" rx="2" fill="#FFC901" stroke-width="1px" stroke="#111"
+        transform="rotate(45 74 28)" />
+
+  <!-- Linke horizontale Linie -->
+  <rect x="10" y="48" width="20" height="4" rx="2" fill="#111"/>
+
+  <!-- Rechte horizontale Linie -->
+  <rect x="70" y="48" width="20" height="4" rx="2" fill="#111"/>
+</svg>
