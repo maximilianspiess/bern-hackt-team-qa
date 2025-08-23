@@ -1,0 +1,12 @@
+:host.progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress {
+  &__chart {
+    max-width: 65vw;
+    max-height: 65vw;
+  }
+}

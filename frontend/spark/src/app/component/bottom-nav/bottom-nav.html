@@ -1,0 +1,40 @@
+@if (router.url !== '/login') {
+  <mat-toolbar class="bottom-nav__toolbar">
+    <div
+      class="bottom-nav__item-group"
+      routerLink="/home"
+      routerLinkActive="bottom-nav__item-group--active"
+      [routerLinkActiveOptions]="{exact: true}"
+      ariaCurrentWhenActive="page">
+      <mat-icon>home</mat-icon>
+      <span>Home</span>
+    </div>
+    <div
+      class="bottom-nav__item-group"
+      routerLink="/goals"
+      routerLinkActive="bottom-nav__item-group--active"
+      [routerLinkActiveOptions]="{exact: true}"
+      ariaCurrentWhenActive="page">
+      <mat-icon>military_tech</mat-icon>
+      <span>Goals</span>
+    </div>
+    <div
+      class="bottom-nav__item-group"
+      routerLink="/groups"
+      routerLinkActive="bottom-nav__item-group--active"
+      [routerLinkActiveOptions]="{exact: true}"
+      ariaCurrentWhenActive="page">
+      <mat-icon>diversity_3</mat-icon>
+      <span>Groups</span>
+    </div>
+    <div
+      class="bottom-nav__item-group"
+      routerLink="/benefits"
+      routerLinkActive="bottom-nav__item-group--active"
+      [routerLinkActiveOptions]="{exact: true}"
+      ariaCurrentWhenActive="page">
+      <mat-icon>local_activity</mat-icon>
+      <span>Benefits</span>
+    </div>
+  </mat-toolbar>
+}
