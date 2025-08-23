@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 import { Goal } from "../../goals/entities/goal.entity";
 
@@ -14,8 +14,15 @@ export class Habit {
     user: User;
 
     @Column("blob")
-    icon: Buffer;
+    icon: String;
 
     @OneToMany(() => Goal, goal => goal.habit)
     goals: Goal[];
+
+    constructor(title: string, user: User, goals: Goal[], icon: String) {
+        this.title = title;
+        this.user = user;
+        this.goals = goals;
+        this.icon = icon;
+    }
 }
