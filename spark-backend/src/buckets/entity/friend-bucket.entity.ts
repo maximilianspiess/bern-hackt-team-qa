@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
+import {User} from "../../users/entities/user.entity";
 
 @Entity()
 export class FriendBucket{
@@ -11,6 +12,17 @@ export class FriendBucket{
     @Column()
     habitId: string;
 
-    @Column()
-    userIds: string[];
+    @ManyToMany(() => User)
+    @JoinTable({
+        name: 'friend_bucket_users',
+        joinColumn: {
+            name: 'friendBucketId',
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: 'user_id',
+            referencedColumnName: 'id'
+        }
+    })
+    users: User[];
 }

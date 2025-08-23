@@ -15,6 +15,8 @@ import { BucketsModule } from './buckets/buckets.module';
 import { BenefitsModule } from './benefits/benefits.module';
 import {ServeStaticModule} from "@nestjs/serve-static";
 import { join } from 'path'
+import {FriendBucket} from "./buckets/entity/friend-bucket.entity";
+import {HabitBucket} from "./buckets/entity/habit-bucket.entity";
 
 @Module({
   imports: [
@@ -29,7 +31,7 @@ import { join } from 'path'
         username: 'spark_user',
         password: 'sp4rk',
         database: 'spark',
-        entities: [User, SparkAccount, Habit, Goal],
+        entities: [User, SparkAccount, Habit, Goal, FriendBucket, HabitBucket],
         synchronize: true
       }),
       ConfigModule.forRoot({
