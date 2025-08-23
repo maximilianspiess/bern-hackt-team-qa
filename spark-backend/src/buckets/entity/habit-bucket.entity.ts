@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, JoinTable, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Habit} from "../../habits/entities/habit.entity";
 import {User} from "../../users/entities/user.entity";
 
@@ -21,7 +21,7 @@ export class HabitBucket{
             referencedColumnName: 'id'
         }
     })
-    commonHabits: Habit[];
+    habits: Habit[];
 
     @ManyToMany(() => User)
     @JoinTable({
@@ -35,5 +35,5 @@ export class HabitBucket{
             referencedColumnName: 'id'
         }
     })
-    users: User[];
+    users: User[]; //TODO may be left out if never used
 }

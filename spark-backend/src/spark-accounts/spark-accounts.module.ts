@@ -4,9 +4,11 @@ import { SparkAccountsController } from './spark-accounts.controller';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {SparkAccount} from "./entities/spark-account.entity";
 import {User} from "../users/entities/user.entity";
+import {Benefit} from "../benefits/entities/benefit.entity";
+import {BenefitRedemption} from "./entities/benefit-redemption.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SparkAccount, User])],
+  imports: [TypeOrmModule.forFeature([SparkAccount, User, Benefit, BenefitRedemption])],
   controllers: [SparkAccountsController],
   providers: [SparkAccountsService],
 })

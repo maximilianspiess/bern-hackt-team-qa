@@ -26,8 +26,8 @@ export class UserService {
     return this.httpClient.get<UserResponseEntity>(`${this.BACKEND_ENDPOINT_URL}/me`, {headers: httpHeaders});
   }
 
-  public loginUser = (username: string, password: string): Observable<{accessToken: string}> => {
-    return this.httpClient.post<{accessToken: string}>(`${this.BACKEND_ENDPOINT_URL}/login`, {username: username, password: password});
+  public loginUser = (username: string, password: string): Observable<{access_token: string}> => {
+    return this.httpClient.post<{access_token: string}>(`${this.BACKEND_ENDPOINT_URL}/login`, {username: username, password: password});
   }
 
   public createUser = (username: string, password: string): Observable<UserResponseEntity> => {

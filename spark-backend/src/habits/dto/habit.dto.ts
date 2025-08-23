@@ -1,5 +1,7 @@
-import {IsString, IsUUID} from "class-validator";
+import {IsArray, IsString, IsUUID} from "class-validator";
 import {Habit} from "../entities/habit.entity";
+import {GoalDto} from "../../goals/dto/goal.dto";
+import {Type} from "class-transformer";
 
 export class HabitDto {
     @IsUUID()
@@ -14,15 +16,16 @@ export class HabitDto {
     @IsString()
     icon: string;
 
-    @IsUUID("all", { each: true })
-    goalIds: string[];
+    @IsArray({ each: true })
+    @Type(() => GoalDto)
+    goals: GoalDto[];
 
-    constructor(id: string, title: string, userId: string, icon: string, goalIds: string[]) {
+    constructor(id: string, title: string, userId: string, icon: string, goals: GoalDto[]) {
         this.id = id;
         this.title = title;
         this.userId = userId;
         this.icon = icon;
-        this.goalIds = goalIds;
+        this.goals = goals;
     }
 
     static fromEntity(entity: Habit) {
@@ -31,7 +34,7 @@ export class HabitDto {
             entity.title,
             entity.user.id,
             entity.icon,
-            entity.goals.map(goal => goal.id)
+            entity.goals.map(goal => GoalDto.fromEntity(goal))
         )
     }
 }
