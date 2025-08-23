@@ -2,45 +2,33 @@ import {ChildEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, TableInh
 import {Habit} from "../../habits/entities/habit.entity";
 
 export enum GoalType {
-    DAILY = 'DAILY',
-    SCHEDULED = 'SCHEDULED',
-    ITERATIVE = 'ITERATIVE'
+    DAILY = 'daily',
+    SCHEDULED = 'scheduled',
+    ITERATIVE = 'iterative'
 }
 
 @Entity()
-@TableInheritance({ column: { type: "varchar", name: "type" } })
+@TableInheritance({ column: { type: "enum", name: "type", enum: GoalType } })
 export abstract class Goal {
-    constructor(habit: Habit, type: GoalType, rewardedSparks: number) {
-        this.habit = habit;
-        this.type = type;
-        this.rewardedSparks = rewardedSparks;
-    }
-
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @ManyToOne(() => Habit)
-    habit: Habit;
-
-    @Column({
-        type: "enum",
-        enum: GoalType
+    @ManyToOne(() => Habit, {
+        onDelete: "CASCADE"
     })
-    type: GoalType;
+    habit: Habit;
 
     @Column({ default: 0 })
     rewardedSparks: number;
+
+    protected constructor(habit: Habit, rewardedSparks: number) {
+        this.habit = habit;
+        this.rewardedSparks = rewardedSparks;
+    }
 }
 
 @ChildEntity(GoalType.DAILY)
 export class DailyGoal extends Goal {
-    constructor(habit: Habit, rewardedSparks: number, startDate: string, doneDays: string[], missedDays: string[]) {
-        super(habit, GoalType.DAILY, rewardedSparks);
-        this.startDate = startDate;
-        this.doneDays = doneDays;
-        this.missedDays = missedDays;
-    }
-
     @Column()
     startDate: string;
 
@@ -49,18 +37,17 @@ export class DailyGoal extends Goal {
 
     @Column("simple-array")
     missedDays: string[];
+
+    constructor(habit: Habit, rewardedSparks: number, startDate: string, doneDays: string[], missedDays: string[]) {
+        super(habit, rewardedSparks);
+        this.startDate = startDate;
+        this.doneDays = doneDays;
+        this.missedDays = missedDays;
+    }
 }
 
 @ChildEntity(GoalType.SCHEDULED)
 export class ScheduledGoal extends Goal {
-    constructor(habit: Habit, rewardedSparks: number, startDate: string, dueDate: string, doneDays: string[], missedDays: string[]) {
-        super(habit, GoalType.SCHEDULED, rewardedSparks);
-        this.startDate = startDate;
-        this.dueDate = dueDate;
-        this.doneDays = doneDays;
-        this.missedDays = missedDays;
-    }
-
     @Column()
     startDate: string;
 
@@ -72,19 +59,27 @@ export class ScheduledGoal extends Goal {
 
     @Column("simple-array")
     missedDays: string[];
+
+    constructor(habit: Habit, rewardedSparks: number, startDate: string, dueDate: string, doneDays: string[], missedDays: string[]) {
+        super(habit, rewardedSparks);
+        this.startDate = startDate;
+        this.dueDate = dueDate;
+        this.doneDays = doneDays;
+        this.missedDays = missedDays;
+    }
 }
 
 @ChildEntity(GoalType.ITERATIVE)
 export class IterativeGoal extends Goal {
-    constructor(habit: Habit, rewardedSparks: number, numIterations: number, doneIterations: number) {
-        super(habit, GoalType.ITERATIVE, rewardedSparks);
-        this.numIterations = numIterations;
-        this.doneIterations = doneIterations;
-    }
-
     @Column()
     numIterations: number;
 
     @Column()
     doneIterations: number;
+
+    constructor(habit: Habit, rewardedSparks: number, numIterations: number, doneIterations: number) {
+        super(habit, rewardedSparks);
+        this.numIterations = numIterations;
+        this.doneIterations = doneIterations;
+    }
 }
