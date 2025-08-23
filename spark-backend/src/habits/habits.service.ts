@@ -52,7 +52,9 @@ export class HabitsService {
   }
 
   async findAll() {
-    return (await this.habitRepository.find({ relations: ["user", "goals"] })).map(habit => HabitDto.fromEntity(habit));
+    return (await this.habitRepository
+        .find({ relations: ["user", "goals", "goals.habit"] }))
+        .map(habit => HabitDto.fromEntity(habit));
   }
 
   async findOne(id: string) {
