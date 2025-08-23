@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {SparkAccount} from "../../spark-accounts/entities/spark-account.entity";
 
 @Entity()
 export class User {
@@ -15,4 +16,8 @@ export class User {
         this.username = username;
         this.password = password;
     }
+
+    @OneToOne(() => SparkAccount)
+    @JoinColumn({name: "spark_acount_id"})
+    account: SparkAccount;
 }
