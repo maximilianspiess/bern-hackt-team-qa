@@ -1,4 +1,4 @@
-import {Component, HostBinding, inject, OnInit, signal} from '@angular/core';
+import {Component, HostBinding, inject, signal} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -14,6 +14,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {Router} from '@angular/router';
+import {UserService} from '../../service/user-service';
+import {UserResponseEntity} from '../../model/UserResponseEntity';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +32,7 @@ import {Router} from '@angular/router';
   styleUrl: './login.scss'
 })
 
-export class Login implements OnInit {
+export class Login {
   @HostBinding('class.login') class: boolean = true;
   hide = signal(true);
   loginForm = new FormGroup({
@@ -41,15 +43,13 @@ export class Login implements OnInit {
   }, {
     validators: this.passwordMatchValidator()
   });
-  private router = inject(Router);
-
-  ngOnInit(): void {
-  }
+  private router: Router = inject(Router);
+  private userService: UserService = inject(UserService);
 
   passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const password = control.value.password;
-      const confirmedPassword = control.value.confirmPassword;
+      const password: string = control.value.password;
+      const confirmedPassword: string = control.value.confirmPassword;
 
       if (password === undefined || confirmedPassword === undefined || !control.value.registerChecked) {
         return null;
@@ -63,16 +63,38 @@ export class Login implements OnInit {
     event.stopPropagation();
   }
 
-  // send pw cha3 hashed
   onSubmit(): void {
     if (this.loginForm.valid) {
       if (this.loginForm.value.registerChecked) {
-        console.log("try register:", this.loginForm.value);
-      } else {
-        console.log("try login:", this.loginForm.value);
+        this.userService.createUser(this.loginForm.value.username!, this.loginForm.value.password!).subscribe({
+          next: (data: UserResponseEntity): void => {
+            this.userService.loginUser(data.username, this.loginForm.value.password!).subscribe({
+              next: (data2: {accessToken: string}): void => {
+                this.setInStorage(data2, {username: data.username});
+                this.redirect("home");
+              }
+            });
+          }
+        });
+      } else {this.userService.loginUser(this.loginForm.value.username!, this.loginForm.value.password!).subscribe({
+          next: (data: {accessToken: string}): void => {
+            this.setInStorage(data, {username: this.loginForm.value.username!});
+            this.redirect("home");
+          }
+        });
       }
-      this.router.navigateByUrl("/home").then();
     }
+  }
+
+  redirect(url: string): void {
+    this.router.navigateByUrl(`/${url}`).then();
+  }
+
+  setInStorage(...args: Record<string, string>[]): void {
+    args.forEach((element: any): void => {
+      const key: string = Object.keys(element)[0];
+      sessionStorage.setItem(key, element[key]);
+    });
   }
 }
 
