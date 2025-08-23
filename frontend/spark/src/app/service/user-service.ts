@@ -10,8 +10,7 @@ import {Observable} from 'rxjs';
 export class UserService {
   private readonly BACKEND_ENDPOINT_URL: string = environments.BACKEND_API_URL + "users"
 
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   public getUsers = (): Observable<UserResponseEntity[]> => {
     return this.httpClient.get<UserResponseEntity[]>(this.BACKEND_ENDPOINT_URL);
