@@ -21,14 +21,9 @@ export class BucketsService {
         @InjectRepository(Habit)
         private habitsRepository: Repository<Habit>
     ) {}
-        private userRepository: Repository<User>,
-        @InjectRepository(Habit)
-        private habitRepository: Repository<Habit>,
-    ) {
-    }
 
     async createHabitBuckets(threshold = 0.75) {
-        const habits = await this.habitRepository.find({relations: ['users']});
+        const habits = await this.habitsRepository.find({relations: ['users']});
         const users = await this.userRepository.find({relations: ['habits']});
 
         // Clear old buckets
@@ -42,12 +37,12 @@ export class BucketsService {
 
             for (const bucket of buckets) {
                 let maxSim = 0
-                for (const h of bucket.commonHabits) {
+                for (const h of bucket.habits) {
                     const sim = cosineSimilarity(habit.embedding, h.embedding)
                     if (sim > maxSim) maxSim = sim;
                 }
                 if (maxSim >= threshold) {
-                    bucket.commonHabits.push(habit)
+                    bucket.habits.push(habit)
                     const habitUsers = users.filter(u => u.habits.some(h => h.id === habit.id));
                     bucket.users.push(...habitUsers);
                     addedToBucket = true;
@@ -57,7 +52,7 @@ export class BucketsService {
 
             if (!addedToBucket) {
                 const bucket = this.habitBucketRepository.create({
-                    commonHabits: [habit],
+                    habits: [habit],
                     users: users.filter(u => u.habits.some(h => h.id === habit.id)),
                 });
                 buckets.push(bucket);

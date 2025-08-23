@@ -1,5 +1,4 @@
-import {Column, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {SparkAccount} from "../../spark-accounts/entities/spark-account.entity";
 import {FriendBucket} from "../../buckets/entity/friend-bucket.entity";
 import {HabitBucket} from "../../buckets/entity/habit-bucket.entity";
