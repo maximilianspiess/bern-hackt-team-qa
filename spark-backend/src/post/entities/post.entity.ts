@@ -32,7 +32,7 @@ export class Post {
     User: User;
 
     @Column()
-    date: string;
+    date: Date;
 
     @ManyToOne(() => Goal)
     Goal: Goal;
@@ -61,7 +61,7 @@ export class Post {
         else if (videoMedia && !imageMedia) this.mediaType = MediaType.VIDEO;
         else if (imageMedia && videoMedia) this.mediaType = MediaType.IMAGE;
         else throw new Error('Either imageMedia or videoMedia must be provided');
-        this.date = Date.now().toString();
+        this.date = new Date();
 
     }
 }

@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import {CreatePostDto} from './dto/create-post.dto';
 import {UpdatePostDto} from './dto/update-post.dto';
 import {InjectRepository} from "@nestjs/typeorm";
@@ -6,6 +6,7 @@ import {Post} from "./entities/post.entity";
 import {Repository} from "typeorm";
 import {User} from "../users/entities/user.entity";
 import {Goal} from "../goals/entities/goal.entity";
+import {UserPayload} from "../users/auth/user-payload.model";
 
 @Injectable()
 export class PostService {
@@ -19,14 +20,15 @@ export class PostService {
     ) {
     }
 
-    async create(createPostDto: CreatePostDto): Promise<Post> {
-        const {title, imageUrl, videoUrl, userId, goalId} = createPostDto;
+    async create(createPostDto: CreatePostDto, currentUser: UserPayload): Promise<Post> {
+        const {title, imageUrl, videoUrl, goalId} = createPostDto;
 
         const user = await this.userRepository.findOne({
-            where: {id: userId},
+            where: {id: currentUser.id},
         });
+
         if (!user) {
-            throw new NotFoundException(`User with id ${userId} not found`);
+            throw new NotFoundException(`User with id ${currentUser.id} not found`);
         }
 
         const goal = await this.goalRepository.findOne({
@@ -44,7 +46,7 @@ export class PostService {
             goal,
         );
 
-        return await this.postRepository.save(post);
+        return this.postRepository.save(post);
     }
 
     async findAll(): Promise<Post[]> {
@@ -61,16 +63,21 @@ export class PostService {
         return post;
     }
 
-    async update(id: number, updatePostDto: UpdatePostDto) {
-        return await this.postRepository.update(id, updatePostDto);
+    async update(updatePostDto: UpdatePostDto, currentUser: UserPayload): Promise<Post> {
+        const post = await this.findOne(currentUser.id);
+
+        if (post.User.id !== currentUser.id) {
+            throw new ForbiddenException('You can only update your own posts');
+        }
+        Object.assign(post, updatePostDto);
+        return this.postRepository.save(post);
     }
 
-    async remove(id: string): Promise<void> {
-        const post = await this.postRepository.findOneBy({
-            id: id
-        })
-        if (!post) {
-            throw new NotFoundException(`Post with id ${id} not found`);
+    async remove(id: string, currentUser: UserPayload): Promise<void> {
+        const post = await this.findOne(id);
+
+        if (post.User.id !== currentUser.id) {
+            throw new ForbiddenException('You can only delete your own posts');
         }
         await this.postRepository.remove(post);
     }
