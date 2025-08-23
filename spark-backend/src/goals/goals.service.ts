@@ -26,8 +26,11 @@ export class GoalsService {
     }
 
     async create(createGoalDto: CreateGoalDto, currentUser: UserPayload) {
-        const habit = await this.habitRepository.findOneBy({
-            id: createGoalDto.habitId
+        const habit = await this.habitRepository.findOne({
+            where: {
+                id: createGoalDto.habitId
+            },
+            relations: ["user"]
         });
         if (habit == null) {
             throw new NotFoundException("Habit not found");
@@ -152,8 +155,11 @@ export class GoalsService {
     }
 
     async update(id: string, updateGoalDto: UpdateGoalDto, currentUser: UserPayload) {
-        const goal = await this.goalRepository.findOneBy({
-            id: id
+        const goal = await this.goalRepository.findOne({
+            where: {
+                id: id
+            },
+            relations: ["habit.user"]
         });
         if (goal == null) {
             throw new NotFoundException("Goal not found");
@@ -179,8 +185,11 @@ export class GoalsService {
     }
 
     async remove(id: string, currentUser: UserPayload) {
-        const goal = await this.goalRepository.findOneBy({
-            id: id
+        const goal = await this.goalRepository.findOne({
+            where: {
+                id: id
+            },
+            relations: ["habit.user"]
         });
         if (goal == null) {
             throw new NotFoundException("Goal not found");

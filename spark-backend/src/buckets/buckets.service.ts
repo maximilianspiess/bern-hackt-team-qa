@@ -71,8 +71,11 @@ export class BucketsService {
             throw new NotFoundException(`User with ID ${id} not found`);
         }
 
-        let bucket = await this.friendBucketRepository.findOneBy({
-            inviteCode: addDto.inviteCode
+        let bucket = await this.friendBucketRepository.findOne({
+            where: {
+                inviteCode: addDto.inviteCode
+            },
+            relations: ["users"]
         });
 
         if (bucket == null){
