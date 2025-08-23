@@ -1,0 +1,58 @@
+<form
+  [formGroup]="loginForm"
+  (submit)="onSubmit()"
+  class="login__form">
+
+  <img
+    alt="logo"
+    class="login__logo"
+    src="assets/logo.svg"/>
+
+  <mat-form-field class="login__form-field">
+    <mat-label>Username</mat-label>
+    <input
+      matInput
+      type="text"
+      formControlName="username"/>
+  </mat-form-field>
+
+  <mat-form-field class="login__form-field">
+    <mat-label>Password</mat-label>
+    <input
+      matInput
+      [type]="hide() ? 'password' : 'text'"
+      formControlName="password"/>
+    <button
+      matIconButton
+      matSuffix
+      (click)="onClick($event)"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide()">
+      <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  @if (loginForm.value.registerChecked) {
+    <mat-form-field class="login__form-field login__registerChecked">
+      <mat-label>Confirm Password</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="confirmPassword"/>
+    </mat-form-field>
+  }
+
+  <div class="login__submit-group">
+    <button
+      matButton="outlined"
+      [disabled]="loginForm.invalid">
+      Submit
+    </button>
+    <mat-checkbox
+      class="login__checkbox"
+      formControlName="registerChecked">
+      Register
+    </mat-checkbox>
+  </div>
+</form>
+
