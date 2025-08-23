@@ -3,7 +3,7 @@ import {BenefitEntity} from '../../../model/BenefitEntity';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
-import {BenefitService} from '../benefit-service';
+import {BenefitService} from '../../../service/benefit-service';
 
 @Component({
   selector: 'app-benefit-card',
