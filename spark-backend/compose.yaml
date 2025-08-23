@@ -9,3 +9,19 @@ services:
       - POSTGRES_PASSWORD=sp4rk
       - POSTGRES_USER=spark_user
       - POSTGRES_DB=spark
+    networks:
+      - app-network
+  embeddings:
+    build:
+      context: ../python-microservice
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - COHERE_API_KEY=${COHERE_API_KEY}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
