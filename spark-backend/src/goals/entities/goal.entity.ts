@@ -1,4 +1,4 @@
-import { ChildEntity, Column, Entity, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
+import {ChildEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
 import {Habit} from "../../habits/entities/habit.entity";
 
 export enum GoalType {
@@ -19,7 +19,7 @@ export abstract class Goal {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column()
+    @ManyToOne(() => Habit)
     habit: Habit;
 
     @Column({
