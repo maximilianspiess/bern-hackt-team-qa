@@ -1,22 +1,24 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "./users/entities/user.entity";
-import { GoalsModule } from './goals/goals.module';
-import { HabitsModule } from "./habits/habits.module";
-import { Habit } from "./habits/entities/habit.entity";
-import { Goal } from "./goals/entities/goal.entity";
-import { SparkAccountsModule } from './spark-accounts/spark-accounts.module';
+import {Module} from '@nestjs/common';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
+import {UsersModule} from './users/users.module';
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {User} from "./users/entities/user.entity";
+import {GoalsModule} from './goals/goals.module';
+import {HabitsModule} from "./habits/habits.module";
+import {Habit} from "./habits/entities/habit.entity";
+import {Goal} from "./goals/entities/goal.entity";
+import {SparkAccountsModule} from './spark-accounts/spark-accounts.module';
 import {SparkAccount} from "./spark-accounts/entities/spark-account.entity";
 import {ConfigModule} from "@nestjs/config";
-import { BucketsModule } from './buckets/buckets.module';
-import { BenefitsModule } from './benefits/benefits.module';
+import {BucketsModule} from './buckets/buckets.module';
+import {BenefitsModule} from './benefits/benefits.module';
 import {ServeStaticModule} from "@nestjs/serve-static";
-import { join } from 'path'
+import {join} from 'path'
 import {FriendBucket} from "./buckets/entity/friend-bucket.entity";
 import {HabitBucket} from "./buckets/entity/habit-bucket.entity";
+import {Benefit} from "./benefits/entities/benefit.entity";
+import {Company} from "./benefits/entities/company.entity";
 
 @Module({
   imports: [
@@ -31,7 +33,7 @@ import {HabitBucket} from "./buckets/entity/habit-bucket.entity";
         username: 'spark_user',
         password: 'sp4rk',
         database: 'spark',
-        entities: [User, SparkAccount, Habit, Goal, FriendBucket, HabitBucket],
+        entities: [User, SparkAccount, Habit, Goal, FriendBucket, HabitBucket, Benefit, Company],
         synchronize: true
       }),
       ConfigModule.forRoot({

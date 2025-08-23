@@ -19,7 +19,7 @@ export class AuthService{
         let user = await this.userRepository.findOneBy({
             username: request.username
         });
-
+        
         if (user == null){
             throw new NotFoundException(`User with username '${request.username}' not found`);
         }

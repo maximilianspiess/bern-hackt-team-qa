@@ -1,5 +1,6 @@
 import {Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
 import {User} from "../../users/entities/user.entity";
+import {randomBytes} from "crypto";
 
 @Entity()
 export class FriendBucket{
@@ -25,4 +26,14 @@ export class FriendBucket{
         }
     })
     users: User[];
+
+    constructor(habitId: string, users: User[]) {
+        this.inviteCode = this.generateInviteCode();
+        this.habitId = habitId;
+        this.users = users;
+    }
+
+    private generateInviteCode(length = 8): string {
+        return randomBytes(length).toString('base64url');
+    }
 }
