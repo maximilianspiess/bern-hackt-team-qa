@@ -1,6 +1,7 @@
-import {Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {User} from "../../users/entities/user.entity";
 import {randomBytes} from "crypto";
+import {Habit} from "../../habits/entities/habit.entity";
 
 @Entity()
 export class FriendBucket{
@@ -10,8 +11,22 @@ export class FriendBucket{
     @Column()
     inviteCode: string;
 
-    @Column()
-    habitId: string;
+    //templateHabit: Habit
+
+    //TODO habit of founding user is taken as "template", and each joining user receives a copy of the habit
+    @ManyToMany(() => Habit)
+    @JoinTable({
+        name: 'friend_bucket_habits',
+        joinColumn: {
+            name: 'friendBucketId',
+            referencedColumnName: 'id'
+        },
+        inverseJoinColumn: {
+            name: 'habitId',
+            referencedColumnName: 'id'
+        }
+    })
+    habits: Habit[];
 
     @ManyToMany(() => User)
     @JoinTable({
@@ -27,9 +42,9 @@ export class FriendBucket{
     })
     users: User[];
 
-    constructor(habitId: string, users: User[]) {
+    constructor(/*"template habit"*/ habit: Habit, users: User[]) {
         this.inviteCode = this.generateInviteCode();
-        this.habitId = habitId;
+        this.habitId = [habit];
         this.users = users;
     }
 
