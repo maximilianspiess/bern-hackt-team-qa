@@ -51,7 +51,11 @@ export class UsersService {
     return GetUserDto.fromUser(user);
   }
 
-  async remove(id: string) {
+  async remove(id: string, currentUser: UserPayload) {
+    if (id !== currentUser.id){
+      throw new ForbiddenException("You are not permitted to view this user.");
+    }
+
     let user = await this.userRepository.findOneBy({
       id: id
     });

@@ -10,6 +10,7 @@ import { Habit } from "./habits/entities/habit.entity";
 import { Goal } from "./goals/entities/goal.entity";
 import { SparkAccountsModule } from './spark-accounts/spark-accounts.module';
 import {SparkAccount} from "./spark-accounts/entities/spark-account.entity";
+import {ConfigModule} from "@nestjs/config";
 
 @Module({
   imports: [
@@ -26,6 +27,10 @@ import {SparkAccount} from "./spark-accounts/entities/spark-account.entity";
         database: 'spark',
         entities: [User, SparkAccount, Habit, Goal],
         synchronize: true
+      }),
+      ConfigModule.forRoot({
+          isGlobal: true,
+          envFilePath: '.env'
       })
   ],
   controllers: [AppController],
