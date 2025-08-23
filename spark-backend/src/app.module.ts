@@ -11,6 +11,10 @@ import { Goal } from "./goals/entities/goal.entity";
 import { SparkAccountsModule } from './spark-accounts/spark-accounts.module';
 import {SparkAccount} from "./spark-accounts/entities/spark-account.entity";
 import {ConfigModule} from "@nestjs/config";
+import { BucketsModule } from './buckets/buckets.module';
+import { BenefitsModule } from './benefits/benefits.module';
+import {ServeStaticModule} from "@nestjs/serve-static";
+import { join } from 'path'
 
 @Module({
   imports: [
@@ -31,7 +35,12 @@ import {ConfigModule} from "@nestjs/config";
       ConfigModule.forRoot({
           isGlobal: true,
           envFilePath: '.env'
-      })
+      }),
+      ServeStaticModule.forRoot({
+          rootPath: join(__dirname, "..", 'client')
+      }),
+      BucketsModule,
+      BenefitsModule
   ],
   controllers: [AppController],
   providers: [AppService],
