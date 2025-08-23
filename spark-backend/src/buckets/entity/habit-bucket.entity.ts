@@ -21,7 +21,7 @@ export class HabitBucket{
             referencedColumnName: 'id'
         }
     })
-    commonHabits: Habit[];
+    habits: Habit[];
 
     @ManyToMany(() => User)
     @JoinTable({

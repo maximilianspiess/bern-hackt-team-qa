@@ -19,6 +19,10 @@ export class BucketsService {
         @InjectRepository(User)
         private userRepository: Repository<User>,
         @InjectRepository(Habit)
+        private habitsRepository: Repository<Habit>
+    ) {}
+        private userRepository: Repository<User>,
+        @InjectRepository(Habit)
         private habitRepository: Repository<Habit>,
     ) {
     }
@@ -71,8 +75,8 @@ export class BucketsService {
 
     async getCurrentUserFriendBuckets(id: string) {
         return await this.friendBucketRepository.find({
-            where: {
-                users: {
+            where:{
+                users:{
                     id: id
                 }
             }
@@ -94,11 +98,18 @@ export class BucketsService {
             id: id
         });
 
-        if (user == null) {
+        if (user == null){
             throw new NotFoundException(`User with ID ${id} not found`);
         }
 
-        let friendBucket = new FriendBucket(createDto.habitId, [user]);
+        let habit = await this.habitsRepository.findOneBy({
+            id: createDto.habitId
+        });
+        if (habit == null) {
+            throw new NotFoundException("Habit not found");
+        }
+
+        let friendBucket = new FriendBucket(habit, [user]);
         return this.friendBucketRepository.save(friendBucket);
     }
 
@@ -112,11 +123,14 @@ export class BucketsService {
             throw new NotFoundException(`User with ID ${id} not found`);
         }
 
-        let bucket = await this.friendBucketRepository.findOneBy({
-            inviteCode: addDto.inviteCode
+        let bucket = await this.friendBucketRepository.findOne({
+            where: {
+                inviteCode: addDto.inviteCode
+            },
+            relations: ["users"]
         });
 
-        if (bucket == null) {
+        if (bucket == null){
             throw new NotFoundException(`Bucket with invite code ${addDto.inviteCode} not found`);
         }
 
