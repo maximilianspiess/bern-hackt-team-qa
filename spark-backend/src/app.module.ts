@@ -7,6 +7,7 @@ import { User } from "./users/entities/user.entity";
 import { GoalsModule } from './goals/goals.module';
 import { HabitsModule } from "./habits/habits.module";
 import { SparkAccountsModule } from './spark-accounts/spark-accounts.module';
+import {SparkAccount} from "./spark-accounts/entities/spark-account.entity";
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { SparkAccountsModule } from './spark-accounts/spark-accounts.module';
         username: 'spark_user',
         password: 'sp4rk',
         database: 'spark',
-        entities: [User],
+        entities: [User, SparkAccount],
         synchronize: true
       }),
       SparkAccountsModule

@@ -1,6 +1,5 @@
-import {Body, Controller, Get, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post} from '@nestjs/common';
 import {SparkAccountsService} from './spark-accounts.service';
-import {SparkAccount} from "./entities/spark-account.entity";
 import {SparkTransaction} from "./entities/spark-transaction.entity";
 
 @Controller('spark-accounts')
