@@ -1,5 +1,5 @@
 import {IsArray, IsDate, IsEnum, IsISO8601, IsNumber, IsUUID} from "class-validator";
-import {DailyGoal, Goal, GoalType, IterativeGoal, ScheduledGoal} from "../entities/goal.entity";
+import {Goal, GoalType} from "../entities/goal.entity";
 
 export abstract class GoalDto {
     @IsUUID()
@@ -19,35 +19,34 @@ export abstract class GoalDto {
     }
 
     static fromEntity(entity: Goal): GoalDto {
-        if (entity instanceof DailyGoal) {
-            return new DailyGoalDto(
-                entity.id,
-                entity.habit.id,
-                entity.rewardedSparks,
-                entity.startDate,
-                entity.doneDays,
-                entity.missedDays
-            );
-        } else if (entity instanceof ScheduledGoal) {
-            return new ScheduledGoalDto(
-                entity.id,
-                entity.habit.id,
-                entity.rewardedSparks,
-                entity.startDate,
-                entity.dueDate,
-                entity.doneDays,
-                entity.missedDays
-            )
-        } else if (entity instanceof IterativeGoal) {
-            return new IterativeGoalDto(
-                entity.id,
-                entity.habit.id,
-                entity.rewardedSparks,
-                entity.numIterations,
-                entity.doneIterations
-            )
-        } else {
-            throw new Error("absolutely not")
+        switch (entity.type) {
+            case GoalType.DAILY:
+                return new DailyGoalDto(
+                    entity.id,
+                    entity.habit.id,
+                    entity.rewardedSparks,
+                    entity.startDate!,
+                    entity.doneDays!,
+                    entity.missedDays!
+                );
+            case GoalType.SCHEDULED:
+                return new ScheduledGoalDto(
+                    entity.id,
+                    entity.habit.id,
+                    entity.rewardedSparks,
+                    entity.startDate!,
+                    entity.dueDate!,
+                    entity.doneDays!,
+                    entity.missedDays!
+                )
+            case GoalType.ITERATIVE:
+                return new IterativeGoalDto(
+                    entity.id,
+                    entity.habit.id,
+                    entity.rewardedSparks,
+                    entity.numIterations!,
+                    entity.doneIterations!
+                )
         }
     }
 }
