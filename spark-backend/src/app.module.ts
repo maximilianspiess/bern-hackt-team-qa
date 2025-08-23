@@ -21,6 +21,7 @@ import {PostModule} from "./post/post.module";
 import {Post} from "./post/entities/post.entity";
 import {Benefit} from "./benefits/entities/benefit.entity";
 import {Company} from "./benefits/entities/company.entity";
+import { EmbeddingsService } from './util/embeddings/embeddings.service';
 
 @Module({
   imports: [
@@ -51,6 +52,6 @@ import {Company} from "./benefits/entities/company.entity";
       BenefitsModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EmbeddingsService],
 })
 export class AppModule {}
