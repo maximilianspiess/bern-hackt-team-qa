@@ -7,6 +7,7 @@ import {BaseChartDirective} from 'ng2-charts';
     BaseChartDirective
   ],
   templateUrl: './progress.html',
+  standalone: true,
   styleUrl: './progress.scss'
 })
 

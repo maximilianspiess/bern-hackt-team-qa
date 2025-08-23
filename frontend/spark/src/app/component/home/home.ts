@@ -11,6 +11,7 @@ import {Groups} from './groups/groups';
     Groups
   ],
   templateUrl: './home.html',
+  standalone: true,
   styleUrl: './home.scss'
 })
 

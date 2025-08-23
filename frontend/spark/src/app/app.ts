@@ -7,6 +7,7 @@ import {TopData} from './component/top-data/top-data';
   selector: 'app-root',
   imports: [RouterOutlet, BottomNav, TopData],
   templateUrl: './app.html',
+  standalone: true,
   styleUrl: './app.scss'
 })
 

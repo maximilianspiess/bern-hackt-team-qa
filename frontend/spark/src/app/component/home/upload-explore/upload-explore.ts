@@ -8,6 +8,7 @@ import {MatCard, MatCardContent} from '@angular/material/card';
     MatCardContent
   ],
   templateUrl: './upload-explore.html',
+  standalone: true,
   styleUrl: './upload-explore.scss'
 })
 

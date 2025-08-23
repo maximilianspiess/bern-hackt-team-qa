@@ -8,6 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatIconModule
   ],
   templateUrl: './top-data.html',
+  standalone: true,
   styleUrl: './top-data.scss'
 })
 

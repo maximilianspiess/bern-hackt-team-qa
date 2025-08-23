@@ -7,6 +7,7 @@ import {MatListModule} from '@angular/material/list';
     MatListModule,
   ],
   templateUrl: './groups.html',
+  standalone: true,
   styleUrl: './groups.scss'
 })
 
