@@ -10,6 +10,9 @@ import {CreateUserDto} from "../users/dto/create-user.dto";
 import {instanceToPlain} from "class-transformer";
 import {HabitDto} from "./dto/habit.dto";
 import {UserPayload} from "../users/auth/user-payload.model";
+import {FriendBucket} from "../buckets/entity/friend-bucket.entity";
+import {HabitBucket} from "../buckets/entity/habit-bucket.entity";
+import {Contains} from "class-validator";
 
 @Injectable()
 export class HabitsService {
@@ -18,8 +21,12 @@ export class HabitsService {
         private habitRepository: Repository<Habit>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
-        @InjectRepository(User)
-        private goalRepository: Repository<Goal>
+        @InjectRepository(Goal)
+        private goalRepository: Repository<Goal>,
+        @InjectRepository(FriendBucket)
+        private friendBucketsRepository: Repository<FriendBucket>,
+        @InjectRepository(HabitBucket)
+        private habitBucketsRepository: Repository<HabitBucket>
     ) {
     }
 
@@ -68,18 +75,32 @@ export class HabitsService {
                 relations: ["user", "goals", "goals.habit"]
             });
 
+        const friendBuckets = await this.friendBucketsRepository.find({
+            where: {
+                users: {
+                    id: user.id
+                }
+            }
+        })
         const friendBucketHabits = (await this.habitRepository
             .find({
                 where: {
-                    id: In(user.friendBuckets.flatMap(bucket => bucket.habits.map(habit => habit.id)))
+                    id: In(friendBuckets.flatMap(bucket => bucket.habits.map(habit => habit.id)))
                 },
                 relations: ["user", "goals", "goals.habit"]
             }))
 
+        const habitBuckets = await this.habitBucketsRepository.find({
+            where: {
+                users: {
+                    id: user.id
+                }
+            }
+        })
         const habitBucketHabits = (await this.habitRepository
             .find({
                 where: {
-                    id: In(user.habitBuckets.flatMap(bucket => bucket.habits.map(habit => habit.id)))
+                    id: In(habitBuckets.flatMap(bucket => bucket.habits.map(habit => habit.id)))
                 },
                 relations: ["user", "goals", "goals.habit"]
             }));
