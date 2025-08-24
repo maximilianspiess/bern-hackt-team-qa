@@ -8,7 +8,13 @@
 
 .progress {
   &__chart {
-    max-width: 65vw;
-    max-height: 65vw;
+    max-width: 75vw;
+    max-height: 75vw;
+  }
+
+  &__title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }

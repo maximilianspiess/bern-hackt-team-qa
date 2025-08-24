@@ -33,63 +33,20 @@ export class Progress implements OnInit {
         this.data = this.parseChartData(data);
       }
     });
-    // Testdata
-    const data = {
-      datasets: [{
-        data: [30, 70],
-        label: 'GOAL1',
-        backgroundColor: [
-          this.chartColorArray[0],
-          '#E2E3DC'
-        ],
-        hoverOffset: 2
-      }, {
-        data: [20, 80],
-        label: 'GOAL2',
-        backgroundColor: [
-          this.chartColorArray[1],
-          '#E2E3DC'
-        ],
-        hoverOffset: 2
-      }, {
-        data: [95, 5],
-        label: 'GOAL3',
-        backgroundColor: [
-          this.chartColorArray[2],
-          '#E2E3DC'
-        ],
-        hoverOffset: 2
-      }, {
-        data: [50, 50],
-        label: 'GOAL4',
-        backgroundColor: [
-          this.chartColorArray[3],
-          '#E2E3DC'
-        ],
-        hoverOffset: 2
-      }, {
-        data: [10, 90],
-        label: 'GOAL4',
-        backgroundColor: [
-          this.chartColorArray[4],
-          '#E2E3DC'
-        ],
-        hoverOffset: 2
-      }]
-    };
   }
 
   parseChartData(data: HabitEntity[]): any {
+    console.log('parseChartData', data);
     const result: any = {datasets: []};
     const userId: string = sessionStorage.getItem("userId")!;
-    for (let habit of data.filter(habit => habit.userId === userId)) {
-      for (let [index, goal] of habit.goals.entries()) {
+    for (let [hIndex, habit] of data.filter(habit => habit.userId === userId).entries()) {
+      for (let [gIndex, goal] of habit.goals.entries()) {
         const progress: number = getProgress(goal)
         result.datasets.push({
           data: [progress, 100 - progress],
-          label: habit.title,
+          label: `${habit.title} |  ${goal.type}`,
           backgroundColor: [
-            this.chartColorArray[index % this.chartColorArray.length],
+            this.chartColorArray[(hIndex + gIndex) % this.chartColorArray.length],
             '#E2E3DC',
           ],
           hoverOffset: 2
