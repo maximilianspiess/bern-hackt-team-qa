@@ -15,8 +15,11 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    let existingUser = await this.userRepository.findOneBy({
-        username: createUserDto.username
+    let existingUser = await this.userRepository.findOne({
+        where: {
+          username: createUserDto.username
+        },
+        relations: ["account"]
     });
 
     if (existingUser != null) {
@@ -32,7 +35,9 @@ export class UsersService {
   }
 
   async findAll() {
-    let users = await this.userRepository.find();
+    let users = await this.userRepository.find({
+      relations: ["account"]
+    });
     return users.map(user => GetUserDto.fromUser(user));
   }
 
@@ -45,8 +50,11 @@ export class UsersService {
       throw new ForbiddenException("You are not permitted to view this user.");
     }
 
-    let user = await this.userRepository.findOneBy({
-      id: id
+    let user = await this.userRepository.findOne({
+      where: {
+        id: id
+      },
+      relations: ["account"]
     });
 
     if (user == null) {
