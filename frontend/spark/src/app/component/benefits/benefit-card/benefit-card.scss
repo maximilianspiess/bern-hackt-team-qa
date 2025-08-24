@@ -1,0 +1,62 @@
+:host.benefit-card {
+
+}
+
+.benefit-card{
+  &__content {
+    display: flex;
+  }
+  &__left{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+  }
+  &__right{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  &__img{
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+  &__price{
+    height: 20%;
+    color: #5e5e5c;
+  }
+  &__title{
+    height: 30%;
+    text-align: left;
+    width: 100%;
+    padding: 0 0;
+  }
+  &__description{
+    height: 20%;
+    text-align: left;
+    width: 100%;
+  }
+  &__expiration{
+    height: 50%;
+  }
+  &__discount{
+    font-weight: bold;
+    font-size: 2rem;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+  }
+  &__bottom{
+    width: 100%;
+  }
+}
+
+h2 {
+  margin: 5px 0px;
+}

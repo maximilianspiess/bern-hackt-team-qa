@@ -1,6 +1,4 @@
 import {Module} from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users/entities/user.entity";
@@ -29,6 +27,8 @@ import {Company} from "./benefits/entities/company.entity";
       GoalsModule,
       SparkAccountsModule,
       PostModule,
+      BucketsModule,
+      BenefitsModule,
       TypeOrmModule.forRoot({
         type: 'postgres',
         host: 'localhost',
@@ -36,7 +36,7 @@ import {Company} from "./benefits/entities/company.entity";
         username: 'spark_user',
         password: 'sp4rk',
         database: 'spark',
-        entities: [User, SparkAccount, Habit, Goal, Post, FriendBucket, HabitBucket],
+        entities: [User, SparkAccount, Habit, Goal, Post, FriendBucket, HabitBucket, Company, Benefit],
 
         synchronize: true
       }),
@@ -46,11 +46,7 @@ import {Company} from "./benefits/entities/company.entity";
       }),
       ServeStaticModule.forRoot({
           rootPath: join(__dirname, "..", 'client')
-      }),
-      BucketsModule,
-      BenefitsModule
+      })
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

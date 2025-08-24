@@ -7,7 +7,6 @@ import {Goal, GoalType} from "./entities/goal.entity";
 import {UpdateGoalDto} from "./dto/update-goal.dto";
 import {GoalDto} from "./dto/goal.dto";
 import {UserPayload} from "../users/auth/user-payload.model";
-import {User} from "../users/entities/user.entity";
 import {FriendBucket} from "../buckets/entity/friend-bucket.entity";
 import {HabitBucket} from "../buckets/entity/habit-bucket.entity";
 
@@ -201,4 +200,5 @@ export class GoalsService {
 
         await this.goalRepository.remove(goal)
     }
+
 }

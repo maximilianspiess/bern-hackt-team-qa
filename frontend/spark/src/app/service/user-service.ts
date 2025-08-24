@@ -8,12 +8,11 @@ import {Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private readonly BACKEND_ENDPOINT_URL: string = environments.BACKEND_API_URL + "users"
+  private readonly BACKEND_ENDPOINT_URL: string = environments.BACKEND_API_URL + "users";
 
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
-  public getUsers = (): Observable<UserResponseEntity[]> => {
+  public getGoals = (): Observable<UserResponseEntity[]> => {
     return this.httpClient.get<UserResponseEntity[]>(this.BACKEND_ENDPOINT_URL);
   }
 
@@ -21,13 +20,12 @@ export class UserService {
     return this.httpClient.get<UserResponseEntity>(`${this.BACKEND_ENDPOINT_URL}/${id}`);
   }
 
-  public getUsersByToken = (token: string): Observable<UserResponseEntity> => {
-    const httpHeaders: HttpHeaders = new HttpHeaders({'Content-Type':  'application/json', Authorization: 'Bearer ' + token});
-    return this.httpClient.get<UserResponseEntity>(`${this.BACKEND_ENDPOINT_URL}/me`, {headers: httpHeaders});
+  public getMe = (): Observable<UserResponseEntity> => {
+    return this.httpClient.get<UserResponseEntity>(`${this.BACKEND_ENDPOINT_URL}/me`);
   }
 
-  public loginUser = (username: string, password: string): Observable<{accessToken: string}> => {
-    return this.httpClient.post<{accessToken: string}>(`${this.BACKEND_ENDPOINT_URL}/login`, {username: username, password: password});
+  public loginUser = (username: string, password: string): Observable<{access_token: string}> => {
+    return this.httpClient.post<{access_token: string}>(`${this.BACKEND_ENDPOINT_URL}/login`, {username: username, password: password});
   }
 
   public createUser = (username: string, password: string): Observable<UserResponseEntity> => {

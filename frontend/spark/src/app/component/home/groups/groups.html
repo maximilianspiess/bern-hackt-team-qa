@@ -1,0 +1,16 @@
+<mat-list
+  role="list"
+  class="group__list">
+  @for (bucket of friendBuckets; track bucket.id) {
+    <mat-list-item
+      role="listitem"
+      class="group__list-item">
+      <div>
+        {{generateGroupName(bucket.habits)}}
+        <span class="message-counter"> - 17 new messages.</span>
+      </div>
+    </mat-list-item>
+  }
+</mat-list>
+
+<div class="spacer"></div>

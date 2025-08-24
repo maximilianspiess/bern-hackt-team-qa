@@ -1,0 +1,21 @@
+:host.upload-explore {
+  margin: 0 10px;
+}
+
+.upload-explore {
+  &__card-grid {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color1) transparent;
+    scrollbar-arrow-color: transparent;
+    overflow-x: auto;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(2, auto);
+    gap: 5px;
+  }
+
+  &__card {
+    min-width: 150px;
+    min-height: 100px;
+  }
+}

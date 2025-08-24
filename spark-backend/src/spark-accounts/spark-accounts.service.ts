@@ -90,8 +90,19 @@ export class SparkAccountsService {
     let redemption = new BenefitRedemption(user, benefit);
     user.account.amount = user.account.amount - benefit.sparkPrice;
 
+    console.log(user)
     await this.redemptionRepository.save(redemption);
     await this.userRepository.save(user);
+  }
 
+  async findCurrent(id: string) {
+    let user = await this.userRepository.findOneBy({
+      id: id
+    });
+
+    if (user == null) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user.account;
   }
 }
