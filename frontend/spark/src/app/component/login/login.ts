@@ -81,9 +81,10 @@ export class Login {
   loginAndSetUserData(): void {
     this.userService.loginUser(this.loginForm.value.username!, this.loginForm.value.password!).subscribe({
       next: (data: {access_token: string}): void => {
+        this.setInStorage(data);
         this.userService.getMe().subscribe({
           next: (userData: UserResponseEntity): void => {
-            this.setInStorage({username: userData.username}, {userId: userData.id}, data);
+            this.setInStorage({username: userData.username}, {userId: userData.id});
             this.redirect("home");
           }
         });
