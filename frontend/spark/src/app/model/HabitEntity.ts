@@ -1,9 +1,9 @@
-import {UserResponseEntity} from './UserResponseEntity';
+import {GoalResponseEntity} from './GoalResponseEntity';
 
 export interface HabitEntity {
   id: string,
   title: string,
-  user: UserResponseEntity,
+  userId: string,
   icon: string,
-  goals: Goal[]
+  goals: GoalResponseEntity[]
 }

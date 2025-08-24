@@ -1,7 +1,8 @@
 import {Component, HostBinding, inject, OnInit} from '@angular/core';
 import {BaseChartDirective} from 'ng2-charts';
-import {GoalService} from '../../../service/goal-service';
-import {GoalResponseEntity} from '../../../model/GoalResponseEntity';
+import {getProgress} from '../../../model/GoalResponseEntity';
+import {HabitService} from '../../../service/habit-service';
+import {HabitEntity} from '../../../model/HabitEntity';
 
 @Component({
   selector: 'app-progress',
@@ -24,16 +25,16 @@ export class Progress implements OnInit {
     '#FFDAA2'
   ]
   data: any;
-  private goalService: GoalService = inject(GoalService);
+  private habitService: HabitService = inject(HabitService);
 
   ngOnInit(): void {
-    this.goalService.getGoalsByUserId(sessionStorage.getItem("userId")!).subscribe({
-      next: (data: GoalResponseEntity[]): void => {
-        this.parseChartData(data);
+    this.habitService.getHabits().subscribe({
+      next: (data: HabitEntity[]): void => {
+        this.data = this.parseChartData(data);
       }
     });
     // Testdata
-    this.data = {
+    const data = {
       datasets: [{
         data: [30, 70],
         label: 'GOAL1',
@@ -78,10 +79,23 @@ export class Progress implements OnInit {
     };
   }
 
-  parseChartData(data: GoalResponseEntity[]): any {
-    const result: any = {};
-    for (let goal in data) {
-
+  parseChartData(data: HabitEntity[]): any {
+    const result: any = {datasets: []};
+    const userId: string = sessionStorage.getItem("userId")!;
+    for (let habit of data.filter(habit => habit.userId === userId)) {
+      for (let [index, goal] of habit.goals.entries()) {
+        const progress: number = getProgress(goal)
+        result.datasets.push({
+          data: [progress, 100 - progress],
+          label: habit.title,
+          backgroundColor: [
+            this.chartColorArray[index % this.chartColorArray.length],
+            '#E2E3DC',
+          ],
+          hoverOffset: 2
+        });
+      }
     }
+    return result;
   }
 }

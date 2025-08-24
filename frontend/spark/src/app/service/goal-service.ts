@@ -17,7 +17,7 @@ export class GoalService {
     return this.httpClient.get<GoalResponseEntity[]>(this.BACKEND_ENDPOINT_URL);
   }
 
-  public getGoalsByUserId = (id: string): Observable<GoalResponseEntity[]> => {
+  public getGoalsById = (id: string): Observable<GoalResponseEntity[]> => {
     return this.httpClient.get<GoalResponseEntity[]>(`${this.BACKEND_ENDPOINT_URL}/${id}`);
   }
 
