@@ -1,4 +1,4 @@
-import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import {CreateHabitDto} from './dto/create-habit.dto';
 import {UpdateHabitDto} from './dto/update-habit.dto';
 import {InjectRepository} from "@nestjs/typeorm";
@@ -12,6 +12,7 @@ import {FriendBucket} from "../buckets/entity/friend-bucket.entity";
 import {HabitBucket} from "../buckets/entity/habit-bucket.entity";
 import {Transactional} from "typeorm-transactional";
 import {Cron, CronExpression} from "@nestjs/schedule";
+import {EmbeddingsService} from "../util/embeddings/embeddings.service";
 
 @Injectable()
 export class HabitsService {
@@ -25,7 +26,8 @@ export class HabitsService {
         @InjectRepository(FriendBucket)
         private friendBucketsRepository: Repository<FriendBucket>,
         @InjectRepository(HabitBucket)
-        private habitBucketsRepository: Repository<HabitBucket>
+        private habitBucketsRepository: Repository<HabitBucket>,
+        private embeddingsService: EmbeddingsService
     ) {
     }
 
@@ -47,11 +49,15 @@ export class HabitsService {
             return goal;
         }));
 
+        const embedding = await this.embeddingsService.getEmbedding(createHabitDto.title)
+
         const habit = new Habit(
             createHabitDto.title,
             user,
             goals,
-            createHabitDto.icon
+            createHabitDto.icon,
+            embedding,
+            createHabitDto.categories
         );
 
         const newHabit = await this.habitRepository.save(habit);

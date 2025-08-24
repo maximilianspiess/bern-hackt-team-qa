@@ -35,5 +35,5 @@ export class HabitBucket{
             referencedColumnName: 'id'
         }
     })
-    users: User[]; //TODO may be left out if never used
+    users: (User | undefined)[];
 }

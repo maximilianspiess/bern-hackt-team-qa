@@ -7,6 +7,7 @@ import {CreateFriendBucketDto} from "./dto/create-friend-bucket.dto";
 import {User} from "../users/entities/user.entity";
 import {AddToFriendBucketDto} from "./dto/add-to-friend-bucket.dto";
 import {Habit} from "../habits/entities/habit.entity";
+import {cosineSimilarity} from "../util/cosineSimilarity";
 
 @Injectable()
 export class BucketsService {
@@ -20,6 +21,52 @@ export class BucketsService {
         @InjectRepository(Habit)
         private habitsRepository: Repository<Habit>
     ) {}
+
+    async createHabitBuckets(threshold = 0.75) {
+        const habits = await this.habitsRepository.find({relations: ['user']});
+        const users = await this.userRepository.find({relations: ['habits']});
+
+        // Clear old buckets
+        const oldBuckets = await this.habitBucketRepository.find({relations: ['users', 'habits']});
+        await this.habitBucketRepository.remove(oldBuckets);
+
+        const buckets: HabitBucket[] = [];
+
+        for (const habit of habits) {
+            let addedToBucket = false;
+
+            for (const bucket of buckets) {
+                let maxSim = 0
+                for (const h of bucket.habits) {
+                    const sim = cosineSimilarity(habit.embedding, h.embedding)
+                    if (sim > maxSim) maxSim = sim;
+                }
+                if (maxSim >= threshold) {
+                    bucket.habits.push(habit)
+                    const habitUsers = users.filter(u => u.habits.some(h => h.id === habit.id));
+                    bucket.users.push(...habitUsers);
+                    addedToBucket = true;
+                    break;
+                }
+            }
+
+            if (!addedToBucket) {
+                const bucket = this.habitBucketRepository.create({
+                    habits: [habit],
+                    users: users.filter(u => u.habits.some(h => h.id === habit.id)),
+                });
+                buckets.push(bucket);
+            }
+        }
+
+        // Remove duplicate users in each bucket
+        for (const bucket of buckets) {
+            bucket.users = Array.from(new Set(bucket.users.map(u => u?.id))).map(
+                id => users.find(u => u.id === id),
+            );
+            await this.habitBucketRepository.save(bucket);
+        }
+    }
 
     async getCurrentUserFriendBuckets(id: string) {
         return await this.friendBucketRepository.find({

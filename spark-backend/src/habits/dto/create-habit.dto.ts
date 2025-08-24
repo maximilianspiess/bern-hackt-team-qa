@@ -12,4 +12,6 @@ export class CreateHabitDto {
 
     @IsUUID("all", { each: true })
     goalIds: string[];
+
+    categories?: string[];
 }
