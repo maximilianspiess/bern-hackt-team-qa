@@ -18,25 +18,22 @@ import {SparkAccountService} from '../../service/spark-account-service';
 
 export class TopData implements OnInit {
   @HostBinding('class.top-data') class: boolean = true;
-  router = inject(Router);
+  router: Router = inject(Router);
+  userService: UserService = inject(UserService);
+  sparkAccountService: SparkAccountService = inject(SparkAccountService);
   user?: UserResponseEntity = undefined;
   account?: SparkAccountEntity = undefined;
-
-  constructor(private userService: UserService,
-              private sparkAccountService: SparkAccountService) {
-  }
 
   ngOnInit() {
     this.userService.getMe().subscribe({
       next: (me) => {
         this.user = me;
-        this.sparkAccountService.getSparkAccountById().subscribe({
+        this.sparkAccountService.getSparkAccountById(me.spark_account_id).subscribe({
           next: (account) => {
             this.account = account;
-            console.log(account)
           }
         })
       }
-    })
+    });
   }
 }

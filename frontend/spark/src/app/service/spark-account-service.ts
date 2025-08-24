@@ -8,12 +8,12 @@ import {SparkAccountEntity} from '../model/SparkAccountEntity';
   providedIn: 'root'
 })
 export class SparkAccountService {
-  apiPath: string = environments.BACKEND_API_URL + 'spark-accounts';
+  private readonly BACKEND_ENDPOINT_URL: string = environments.BACKEND_API_URL + "spark-accounts";
 
   constructor(private http: HttpClient) {
   }
 
-  public getSparkAccountById(): Observable<SparkAccountEntity> {
-    return this.http.get<SparkAccountEntity>(this.apiPath);
+  public getSparkAccountById(id: string): Observable<SparkAccountEntity> {
+    return this.http.get<SparkAccountEntity>(`${this.BACKEND_ENDPOINT_URL}/${id}`);
   }
 }

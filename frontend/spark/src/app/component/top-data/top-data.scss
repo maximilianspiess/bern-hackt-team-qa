@@ -13,10 +13,18 @@
   &__username {
     position: relative;
     padding: 0.2rem;
+    margin-bottom: 0.2rem;
   }
   &__sparkle{
     border: 1px solid dimgray;
     border-radius: 20px;
     padding: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
+
+  &__logo {
+    position: absolute;
+    left: 50%;
+    transform: translate(-40%);
   }
 }
