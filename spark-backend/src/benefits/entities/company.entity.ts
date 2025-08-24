@@ -9,5 +9,5 @@ export class Company{
     name: string;
 
     @Column()
-    imageUrl: string;
+    image: string;
 }

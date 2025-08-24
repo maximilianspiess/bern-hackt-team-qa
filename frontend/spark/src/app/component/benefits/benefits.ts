@@ -1,5 +1,5 @@
 import {Component, HostBinding, OnInit} from '@angular/core';
-import {BenefitService} from './benefit-service';
+import {BenefitService} from '../../service/benefit-service';
 import {BenefitEntity} from '../../model/BenefitEntity';
 import {BenefitCard} from './benefit-card/benefit-card';
 
