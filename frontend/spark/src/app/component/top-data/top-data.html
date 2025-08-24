@@ -1,12 +1,11 @@
 @if (router.url !== '/login') {
-  <div class="top-data__item">
-    {{userInitial}}
+  <div class="top-data__username">
+    Hey, <strong>{{user?.username}}</strong>
   </div>
-  <div class="top-data__item">
-    {{sparkCount}}
-    <mat-icon class="top-data__spark">star</mat-icon>
-    <mat-icon class="top-data__spark">star</mat-icon>
-    <mat-icon class="top-data__spark">star</mat-icon>
+  <img src="assets/logos/logo_spark.svg" height="50px" width="auto">
+  <div class="top-data__sparkle">
+<!--    {{account?.amount}}-->
+    ✨<strong>1000</strong>✨
   </div>
 }
 

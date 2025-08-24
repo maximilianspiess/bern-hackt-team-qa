@@ -1,6 +1,9 @@
-import {Component, HostBinding} from '@angular/core';
+import {Component, HostBinding, OnInit} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {BaseChartDirective} from 'ng2-charts';
+import {HabitService} from '../../service/habit-service';
+import {HabitEntity} from '../../model/HabitEntity';
+import {GoalResponseEntity} from '../../model/GoalResponseEntity';
 
 @Component({
   selector: 'app-goals',
@@ -13,11 +16,23 @@ import {BaseChartDirective} from 'ng2-charts';
   styleUrl: './goals.scss'
 })
 
-export class Goals {
+export class Goals implements OnInit{
   @HostBinding('class.goals') class: boolean = true;
   graphColor: string = '#FF9A4D';
+  habits: HabitEntity[] = [];
 
-  parseChartData(data: any): any {
+  constructor(private habitService: HabitService) {
+  }
+
+  ngOnInit() {
+    this.habitService.getHabits().subscribe({
+      next: (habits) => {
+        this.habits = habits;
+      }
+    })
+  }
+
+  parseChartData(goal: GoalResponseEntity): any {
     return {
       datasets: [{
         data: [30, 70],

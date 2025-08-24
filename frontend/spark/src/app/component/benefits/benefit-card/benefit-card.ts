@@ -23,7 +23,7 @@ export class BenefitCard {
 
   openDialog(){
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {title: 'Do you want to redeem ' + this.benefit.title + '?', price: this.benefit.sparkPrice}
+      data: {title: 'Do you want to redeem ' + this.benefit.text + ' for ' + this.benefit.sparkPrice + ' sparks?', price: this.benefit.sparkPrice}
     })
 
     dialogRef.afterClosed().subscribe(res => {
@@ -33,5 +33,10 @@ export class BenefitCard {
         // do nothing
       }
     })
+  }
+
+  formatDDMMMYYY(date: Date): string {
+    date = new Date(date);
+    return date.getDate().toString() + '.' + (date.getMonth()+1).toString() + '.' + date.getFullYear().toString();
   }
 }

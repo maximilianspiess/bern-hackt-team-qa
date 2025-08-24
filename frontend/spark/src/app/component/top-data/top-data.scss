@@ -1,39 +1,22 @@
 :host.top-data {
   display: flex;
   flex-direction: row;
+  align-items: end;
+  justify-content: space-between;
   position: relative;
+  border-bottom: 1px solid lightgray;
+  height: 3.5rem;
+  padding: 0.3rem;
 }
 
 .top-data {
-  &__item {
+  &__username {
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 5px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: var(--accent-color2);
-    border: 1px solid var(--primary-color);
+    padding: 0.2rem;
   }
-
-  &__spark {
-    font-size: 15px;
-    position: absolute;
-
-    &:nth-child(1) {
-      margin-right: 15px;
-      margin-bottom: 15px;
-    }
-
-    &:nth-child(2) {
-      margin-left: 45px;
-    }
-
-    &:nth-child(3) {
-      margin-left: 10px;
-      margin-top: 40px;
-    }
+  &__sparkle{
+    border: 1px solid dimgray;
+    border-radius: 20px;
+    padding: 0.2rem;
   }
 }

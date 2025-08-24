@@ -18,6 +18,6 @@ export class BenefitService {
   }
 
   public redeemBenefit(benefitId: string): Observable<void>{
-    return this.http.get<void>(environments.BACKEND_API_URL + '/spark-accounts/redeem' + benefitId);
+    return this.http.get<void>(environments.BACKEND_API_URL + '/spark-accounts/redeem/' + benefitId);
   }
 }

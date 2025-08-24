@@ -1,13 +1,14 @@
 :host.goals {
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
-  gap: 5px
 }
 
 .goals {
   &__habit {
     width: 95vw;
+    margin-top: 20px;
   }
 
   &__goal {
@@ -20,4 +21,8 @@
     max-width: 10vw;
     max-height: 10vw;
   }
+}
+
+.spacer {
+  height: 7rem;
 }

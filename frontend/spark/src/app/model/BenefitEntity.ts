@@ -2,22 +2,20 @@ import {CompanyEntity} from './CompanyEntity';
 
 export class BenefitEntity{
   id: string;
-  title: string;
-  description: string;
+  text: string;
   discount: number;
   expirationDate: Date;
   sparkPrice: number;
-  imageUlr: string;
+  image: string;
   company: CompanyEntity;
 
-  constructor(id: string, title: string, description: string, discount: number, expirationDate: Date, sparkPrice: number, imageUrl: string, company: CompanyEntity) {
+  constructor(id: string, text: string, discount: number, expirationDate: Date, sparkPrice: number, image: string, company: CompanyEntity) {
     this.id = id;
-    this.title = title;
-    this.description = description;
+    this.text = text;
     this.discount = discount;
     this.expirationDate = expirationDate;
     this.sparkPrice = sparkPrice;
-    this.imageUlr = imageUrl;
+    this.image = image;
     this.company = company;
   }
 }

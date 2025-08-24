@@ -1,21 +1,23 @@
-@for (item of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; track item) {
+@for (habit of habits; track habit.id) {
   <mat-card class="goals__habit" appearance="outlined">
     <mat-card-header>
-      <mat-card-title>{{ item }}</mat-card-title>
+      <mat-card-title>{{ habit.title }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      @for (thing of ["a", "b", "c", "d", "e", "f", "g"]; track thing) {
+      @for (goal of habit.goals; track goal.id) {
         <div class="goals__goal">
           <canvas
             class="goals__chart"
             baseChart
-            [data]="parseChartData(thing)"
+            [data]="parseChartData(goal)"
             [type]="'doughnut'"
             [legend]="true">
           </canvas>
-          <h2>{{ thing }}</h2>
+          <h2>{{ goal.type }}</h2>
         </div>
       }
     </mat-card-content>
   </mat-card>
 }
+
+<div class="spacer"></div>

@@ -19,7 +19,6 @@ import {MatButton} from '@angular/material/button';
   template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>
-      <p>Price: {{ data.price }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button (click)="onNo()">No</button>

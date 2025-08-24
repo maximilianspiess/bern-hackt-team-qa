@@ -1,11 +1,16 @@
 <mat-list
   role="list"
   class="group__list">
-  @for (item of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; track item) {
+  @for (bucket of friendBuckets; track bucket.id) {
     <mat-list-item
       role="listitem"
       class="group__list-item">
-      {{item}}
+      <div>
+        {{generateGroupName(bucket.habits)}}
+        <span class="message-counter"> - 17 new messages.</span>
+      </div>
     </mat-list-item>
   }
 </mat-list>
+
+<div class="spacer"></div>
