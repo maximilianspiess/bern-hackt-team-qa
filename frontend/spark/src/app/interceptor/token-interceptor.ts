@@ -2,7 +2,6 @@ import {HttpHandlerFn, HttpInterceptorFn, HttpRequest} from '@angular/common/htt
 
 export const tokenInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const accessToken: string = sessionStorage.getItem("access_token")!;
-  console.log("T",accessToken);
   if (accessToken) {
     req = req.clone({
       setHeaders: {

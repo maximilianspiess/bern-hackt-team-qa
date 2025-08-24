@@ -69,22 +69,26 @@ export class Login {
       if (this.loginForm.value.registerChecked) {
         this.userService.createUser(this.loginForm.value.username!, this.loginForm.value.password!).subscribe({
           next: (data: UserResponseEntity): void => {
-            this.userService.loginUser(data.username, this.loginForm.value.password!).subscribe({
-              next: (data2: {access_token: string}): void => {
-                this.setInStorage(data2, {username: data.username});
-                this.redirect("home");
-              }
-            });
+            this.loginAndSetUserData();
           }
         });
-      } else {this.userService.loginUser(this.loginForm.value.username!, this.loginForm.value.password!).subscribe({
-          next: (data: {access_token: string}): void => {
-            this.setInStorage(data, {username: this.loginForm.value.username!});
+      } else {
+        this.loginAndSetUserData();
+      }
+    }
+  }
+
+  loginAndSetUserData(): void {
+    this.userService.loginUser(this.loginForm.value.username!, this.loginForm.value.password!).subscribe({
+      next: (data: {access_token: string}): void => {
+        this.userService.getMe().subscribe({
+          next: (userData: UserResponseEntity): void => {
+            this.setInStorage({username: userData.username}, {userId: userData.id}, data);
             this.redirect("home");
           }
         });
       }
-    }
+    });
   }
 
   redirect(url: string): void {

@@ -8,11 +8,11 @@ import {Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private readonly BACKEND_ENDPOINT_URL: string = environments.BACKEND_API_URL + "users"
+  private readonly BACKEND_ENDPOINT_URL: string = environments.BACKEND_API_URL + "users";
 
   constructor(private httpClient: HttpClient) {}
 
-  public getUsers = (): Observable<UserResponseEntity[]> => {
+  public getGoals = (): Observable<UserResponseEntity[]> => {
     return this.httpClient.get<UserResponseEntity[]>(this.BACKEND_ENDPOINT_URL);
   }
 
@@ -20,9 +20,8 @@ export class UserService {
     return this.httpClient.get<UserResponseEntity>(`${this.BACKEND_ENDPOINT_URL}/${id}`);
   }
 
-  public getUsersByToken = (token: string): Observable<UserResponseEntity> => {
-    const httpHeaders: HttpHeaders = new HttpHeaders({'Content-Type':  'application/json', Authorization: 'Bearer ' + token});
-    return this.httpClient.get<UserResponseEntity>(`${this.BACKEND_ENDPOINT_URL}/me`, {headers: httpHeaders});
+  public getMe = (): Observable<UserResponseEntity> => {
+    return this.httpClient.get<UserResponseEntity>(`${this.BACKEND_ENDPOINT_URL}/me`);
   }
 
   public loginUser = (username: string, password: string): Observable<{access_token: string}> => {
