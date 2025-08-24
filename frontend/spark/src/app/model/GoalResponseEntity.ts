@@ -21,7 +21,7 @@ export function getProgress(goal: GoalResponseEntity): number {
   switch (goal.type) {
     case GoalType.SCHEDULED:
       const differenceInMs: number =
-        Math.abs(goal.dueDate!.getTime() - goal.startDate!.getTime());
+        Math.abs(new Date(goal.dueDate!).getTime() - new Date(goal.startDate!).getTime());
       const millisecondsInDay: number = 1000 * 60 * 60 * 24;
       const numDays: number = Math.floor(differenceInMs / millisecondsInDay);
       return Math.ceil(100 * goal.doneDays!.length / numDays);
