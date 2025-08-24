@@ -1,11 +1,10 @@
 import {Component, HostBinding} from '@angular/core';
-import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatCard} from '@angular/material/card';
 
 @Component({
   selector: 'app-upload-explore',
   imports: [
     MatCard,
-    MatCardContent
   ],
   templateUrl: './upload-explore.html',
   standalone: true,

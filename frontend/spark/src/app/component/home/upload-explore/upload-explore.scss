@@ -1,5 +1,5 @@
 :host.upload-explore {
-  margin: 0 10px;
+  height: auto;
 }
 
 .upload-explore {
@@ -10,12 +10,22 @@
     overflow-x: auto;
     display: grid;
     grid-auto-flow: column;
+    position: relative;
+    left: 0;
     grid-template-rows: repeat(2, auto);
-    gap: 5px;
+    gap: 1rem;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
   }
 
   &__card {
-    min-width: 150px;
-    min-height: 100px;
+    min-width: 22.5vw;
+    min-height: 37.5vw;
+  }
+
+  &__img {
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--mat-card-outlined-container-shape, var(--mat-sys-corner-medium));
   }
 }
