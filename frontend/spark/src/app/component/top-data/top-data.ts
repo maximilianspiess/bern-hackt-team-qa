@@ -23,6 +23,7 @@ export class TopData implements OnInit {
   sparkAccountService: SparkAccountService = inject(SparkAccountService);
   user?: UserResponseEntity = undefined;
   account?: SparkAccountEntity = undefined;
+  protected readonly Number: NumberConstructor  = Number;
 
   ngOnInit() {
     this.userService.getMe().subscribe({
