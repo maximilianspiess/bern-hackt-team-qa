@@ -33,4 +33,9 @@ export class BucketsController {
   public addUserToFriendsBucket(@Body() addDto: AddToFriendBucketDto, @CurrentUser() user: UserPayload){
     return this.bucketsService.addUserToFriendBucket(addDto, user.id);
   }
+
+    @Post('rebuild')
+    async rebuildBuckets() {
+        return this.bucketsService.createHabitBuckets();
+    }
 }

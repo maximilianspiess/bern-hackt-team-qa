@@ -23,11 +23,11 @@ export class BucketsService {
     ) {}
 
     async createHabitBuckets(threshold = 0.75) {
-        const habits = await this.habitsRepository.find({relations: ['users']});
+        const habits = await this.habitsRepository.find({relations: ['user']});
         const users = await this.userRepository.find({relations: ['habits']});
 
         // Clear old buckets
-        const oldBuckets = await this.habitBucketRepository.find({relations: ['users', 'commonHabits']});
+        const oldBuckets = await this.habitBucketRepository.find({relations: ['users', 'habits']});
         await this.habitBucketRepository.remove(oldBuckets);
 
         const buckets: HabitBucket[] = [];
