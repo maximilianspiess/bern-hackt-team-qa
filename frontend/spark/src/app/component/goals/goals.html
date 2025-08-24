@@ -1,0 +1,23 @@
+@for (habit of habits; track habit.id) {
+  <mat-card class="goals__habit" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>{{ habit.title }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @for (goal of habit.goals; track goal.id) {
+        <div class="goals__goal">
+          <canvas
+            class="goals__chart"
+            baseChart
+            [data]="parseChartData(goal)"
+            [type]="'doughnut'"
+            [legend]="true">
+          </canvas>
+          <h2>{{ goal.type }}</h2>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+}
+
+<div class="spacer"></div>

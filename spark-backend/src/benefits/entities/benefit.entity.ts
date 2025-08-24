@@ -10,6 +10,12 @@ export class Benefit {
     discount: number;
 
     @Column()
+    text: string;
+
+    @Column()
+    image: string;
+
+    @Column()
     expirationDate: Date;
 
     @Column()

@@ -10,6 +10,12 @@ export class SparkAccountsController {
   constructor(private readonly sparkAccountsService: SparkAccountsService) {}
 
   @UseGuards(JwtAuthGuard)
+  @Get()
+  findCurrentAccount(@CurrentUser() user: UserPayload) {
+    return this.sparkAccountsService.findCurrent(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.sparkAccountsService.findOne(id);

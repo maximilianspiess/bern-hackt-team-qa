@@ -1,15 +1,17 @@
-import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import {CreateHabitDto} from './dto/create-habit.dto';
 import {UpdateHabitDto} from './dto/update-habit.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {In, Repository} from "typeorm";
 import {Habit} from "./entities/habit.entity";
 import {User} from "../users/entities/user.entity";
-import {Goal} from "../goals/entities/goal.entity";
+import {Goal, GoalType} from "../goals/entities/goal.entity";
 import {HabitDto} from "./dto/habit.dto";
 import {UserPayload} from "../users/auth/user-payload.model";
 import {FriendBucket} from "../buckets/entity/friend-bucket.entity";
 import {HabitBucket} from "../buckets/entity/habit-bucket.entity";
+import {Transactional} from "typeorm-transactional";
+import {Cron, CronExpression} from "@nestjs/schedule";
 import {EmbeddingsService} from "../util/embeddings/embeddings.service";
 
 @Injectable()
@@ -83,12 +85,13 @@ export class HabitsService {
                 users: {
                     id: user.id
                 }
-            }
+            },
+            relations: ["habits"]
         })
         const friendBucketHabits = (await this.habitRepository
             .find({
                 where: {
-                    id: In(friendBuckets.flatMap(bucket => bucket.habits.map(habit => habit.id)))
+                    id: In(friendBuckets.flatMap(bucket => bucket.habits?.map(habit => habit.id)))
                 },
                 relations: ["user", "goals", "goals.habit"]
             }))
@@ -98,7 +101,8 @@ export class HabitsService {
                 users: {
                     id: user.id
                 }
-            }
+            },
+            relations: ["habits"]
         })
         const habitBucketHabits = (await this.habitRepository
             .find({
@@ -159,5 +163,93 @@ export class HabitsService {
         }
 
         await this.habitRepository.remove(habit);
+    }
+
+    @Transactional()
+    private async addSparksToUser(id: string, amount: number) {
+        let user = await this.userRepository.findOneBy({
+            id: id
+        });
+
+        if (user == null) {
+            return;
+        }
+
+        user.account.amount = user.account.amount + amount;
+        await this.userRepository.save(user);
+    }
+
+    private toDayStamp(d: Date): number {
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    }
+
+    @Cron(CronExpression.EVERY_DAY_AT_11PM)
+    async awardSparksForCompletedDailyGoals(){
+        const dailyValue = 20;
+
+        const habits = await this.habitRepository.find({
+            where: {
+                goals: {
+                    type: GoalType.DAILY
+                }
+            }
+        });
+
+        let today = new Date();
+
+        habits.forEach(habit => {
+            let goals = habit.goals;
+            goals.forEach(goal => {
+                if (goal.doneDays?.some(d => this.toDayStamp(d) === this.toDayStamp(today))){
+                    this.addSparksToUser(habit.user.id, dailyValue);
+                }
+            })
+        })
+    }
+
+    @Cron(CronExpression.EVERY_DAY_AT_11PM)
+    async awardSparksForCompletedScheduledGoals(){
+        const scheduledValue = 20;
+
+        const habits = await this.habitRepository.find({
+            where: {
+                goals: {
+                    type: GoalType.SCHEDULED
+                }
+            }
+        });
+
+        let today = new Date();
+
+        habits.forEach(habit => {
+            let goals = habit.goals;
+            goals.forEach(goal => {
+                if (goal.dueDate! < today){
+                    let numberDoneDays = goal.doneDays!.length;
+                    this.addSparksToUser(habit.user.id, scheduledValue * numberDoneDays);
+                }
+            });
+        });
+    }
+
+    @Cron(CronExpression.EVERY_DAY_AT_11PM)
+    async awardSparksForCompletedIterativeGoals(){
+        const iterationValue = 15;
+
+        const habits = await this.habitRepository.find({
+            where: {
+                goals: {
+                    type: GoalType.ITERATIVE
+                }
+            }
+        });
+
+        habits.forEach(habit => {
+            let goals = habit.goals;
+            goals.forEach(goal => {
+                let numberDoneDays = goal.doneIterations!;
+                this.addSparksToUser(habit.user.id, iterationValue * numberDoneDays);
+            });
+        });
     }
 }

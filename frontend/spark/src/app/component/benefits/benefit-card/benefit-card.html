@@ -1,0 +1,27 @@
+<mat-card appearance="outlined">
+  <mat-card-content (click)="openDialog()">
+    <div class="benefit-card__content">
+      <div class="benefit-card__left">
+        <div>
+          <img class="benefit-card__img" src="http://localhost:3000/{{benefit.image}}" alt="benefit-image">
+        </div>
+      </div>
+      <div class="benefit-card__right">
+        <div class="benefit-card__title">
+          <h2>{{benefit.company.name}}</h2>
+        </div>
+        <div class="benefit-card__description">{{benefit.text}}</div>
+        <div class="benefit-card__bottom">
+          @if (benefit.discount == 100) {
+            <div class="benefit-card__discount">Free</div>
+          } @else {
+            <div class="benefit-card__discount">{{benefit.discount}}%</div>
+          }
+          <div class="benefit-card__price">
+            <p>{{benefit.sparkPrice}} sparks, until {{this.formatDDMMMYYY(benefit.expirationDate)}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
