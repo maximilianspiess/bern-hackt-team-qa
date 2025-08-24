@@ -36,7 +36,6 @@ export class Progress implements OnInit {
   }
 
   parseChartData(data: HabitEntity[]): any {
-    console.log('parseChartData', data);
     const result: any = {datasets: []};
     const userId: string = sessionStorage.getItem("userId")!;
     for (let [hIndex, habit] of data.filter(habit => habit.userId === userId).entries()) {

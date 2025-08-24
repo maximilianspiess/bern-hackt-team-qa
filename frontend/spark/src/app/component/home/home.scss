@@ -1,3 +1,9 @@
 :host.home {
 
 }
+
+.home {
+  &__spacer {
+    height: 10vh;
+  }
+}

@@ -1,4 +1,4 @@
-import {Component, HostBinding, OnInit} from '@angular/core';
+import {Component, HostBinding, inject, OnInit} from '@angular/core';
 import {MatListModule} from '@angular/material/list';
 import {BucketService} from '../../../service/bucket-service';
 import {FriendBucketEntity} from '../../../model/FriendBucketEntity';
@@ -19,19 +19,18 @@ export class Groups implements OnInit {
   @HostBinding('class.groups') class: boolean = true;
   friendBuckets: FriendBucketEntity[] = [];
   habitBuckets: HabitBucketEntity[] = [];
-
-  constructor(private bucketService: BucketService) {
-  }
+  bucketService: BucketService = inject(BucketService);
+  protected readonly Math: Math = Math;
 
   ngOnInit() {
     this.bucketService.getAllFriendBucket().subscribe({
-      next: (buckets) => {
+      next: (buckets: FriendBucketEntity[]) => {
         this.friendBuckets = buckets;
       }
     });
 
     this.bucketService.getAllHabitBucket().subscribe({
-      next: (buckets) => {
+      next: (buckets: HabitBucketEntity[]) => {
         this.habitBuckets = buckets;
       }
     });

@@ -7,10 +7,8 @@
       class="group__list-item">
       <div>
         {{generateGroupName(bucket.habits)}}
-        <span class="message-counter"> - 17 new messages.</span>
+        <span class="message-counter"> - {{Math.floor(Math.random() * 50)}} new messages.</span>
       </div>
     </mat-list-item>
   }
 </mat-list>
-
-<div class="spacer"></div>
