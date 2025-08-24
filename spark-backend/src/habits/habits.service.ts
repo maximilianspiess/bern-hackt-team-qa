@@ -79,7 +79,8 @@ export class HabitsService {
                 users: {
                     id: user.id
                 }
-            }
+            },
+            relations: ["habits"]
         })
         const friendBucketHabits = (await this.habitRepository
             .find({
@@ -94,7 +95,8 @@ export class HabitsService {
                 users: {
                     id: user.id
                 }
-            }
+            },
+            relations: ["habits"]
         })
         const habitBucketHabits = (await this.habitRepository
             .find({
