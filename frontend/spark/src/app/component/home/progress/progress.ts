@@ -1,5 +1,7 @@
-import {Component, HostBinding, OnInit} from '@angular/core';
+import {Component, HostBinding, inject, OnInit} from '@angular/core';
 import {BaseChartDirective} from 'ng2-charts';
+import {GoalService} from '../../../service/goal-service';
+import {GoalResponseEntity} from '../../../model/GoalResponseEntity';
 
 @Component({
   selector: 'app-progress',
@@ -22,8 +24,14 @@ export class Progress implements OnInit {
     '#FFDAA2'
   ]
   data: any;
+  private goalService: GoalService = inject(GoalService);
 
   ngOnInit(): void {
+    this.goalService.getGoalsByUserId(sessionStorage.getItem("userId")!).subscribe({
+      next: (data: GoalResponseEntity[]): void => {
+        this.parseChartData(data);
+      }
+    });
     // Testdata
     this.data = {
       datasets: [{
@@ -70,7 +78,10 @@ export class Progress implements OnInit {
     };
   }
 
-  parseChartData(data: any): any {
-    return null;
+  parseChartData(data: GoalResponseEntity[]): any {
+    const result: any = {};
+    for (let goal in data) {
+
+    }
   }
 }
